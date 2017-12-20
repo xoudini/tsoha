@@ -2,7 +2,8 @@
 
 ### Links
 - [Deployed application](http://viela.pw/)
-- [Documentation](https://www.github.com)
+- [Documentation](doc/Documentation.pdf)
 
 ### Topic outline
-    // TODO
+
+A slightly modified version of [this](https://advancedkittenry.github.io/suunnittelu_ja_tyoymparisto/aiheet/Keskustelufoorumi.html).
