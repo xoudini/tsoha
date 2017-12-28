@@ -3,7 +3,6 @@
 ### Links
 - [Deployed application](http://viela.pw/)
 - [Documentation](doc/Documentation.pdf)
-
 - [Database connection test](http://viela.pw/connection)
 
 ### Topic outline
