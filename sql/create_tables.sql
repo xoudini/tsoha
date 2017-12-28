@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS Tag (
 
 CREATE TABLE IF NOT EXISTS Thread (
     id SERIAL PRIMARY KEY,
-    author_id INTEGER REFERENCES Profile(account_id),
+    author_id INTEGER REFERENCES Account(id),
     title TEXT NOT NULL,
     created TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Response (
     id SERIAL PRIMARY KEY,
-    author_id INTEGER REFERENCES Profile(account_id),
+    author_id INTEGER REFERENCES Account(id),
     thread_id INTEGER REFERENCES Thread(id),
     content TEXT NOT NULL,
     created TIMESTAMP NOT NULL
