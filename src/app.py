@@ -1,6 +1,6 @@
 from flask import Flask
 
-from src.controllers.base import BaseController
+from src.controllers.hello import HelloWorldController
 from src.utilities.database import DatabaseManager
 
 # Required instances.
@@ -14,7 +14,27 @@ def connection():
 
 @app.route("/")
 def index():
-    return BaseController.index()
+    return HelloWorldController.index()
+
+@app.route("/threads")
+def threads():
+    return HelloWorldController.threads()
+
+@app.route("/threads/1")
+def thread():
+    return HelloWorldController.thread()
+
+@app.route("/signin")
+def signin():
+    return HelloWorldController.signin()
+
+@app.route("/profile")
+def profile():
+    return HelloWorldController.profile()
+
+@app.route("/profile/edit")
+def editprofile():
+    return HelloWorldController.editprofile()
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0')
