@@ -1,4 +1,5 @@
 import psycopg2 as pg
+from psycopg2.extras import RealDictCursor, RealDictRow
 
 from typing import List, Dict, Tuple
 
@@ -30,3 +31,25 @@ class DatabaseManager:
                 return "Database connection established!"
         except Exception as e:
             return "Exception: {0}".format(e)
+
+    def execute_query(self, sql: str, mapping: Dict[str, str] = None) -> List[Dict]:
+        try:
+            with pg.connect(dsn=self.dsn) as connection:
+                with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+                    try:
+                        if mapping is None:
+                            cursor.execute(sql)
+                        else:
+                            cursor.execute(sql, mapping)
+
+                        rows = cursor.fetchall()
+
+                        return rows
+
+                    except Exception as e:
+                        # TODO: Rethrow.
+                        print(e)
+        
+        except Exception as e:
+            # TODO: Rethrow.
+            print(e)
