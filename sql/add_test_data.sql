@@ -1,5 +1,5 @@
-INSERT INTO Account (username, password, admin) VALUES ('dan', '12345', TRUE);
-INSERT INTO Account (username, password, admin) VALUES ('test', '12345', FALSE);
+INSERT INTO Account (username, password, admin) VALUES ('dan', '$2b$12$HrMmPp9aWiywl/aqAYzRDO9LySiSGGygD.Pta2P8SCFb2OnNA8x1e', TRUE);
+INSERT INTO Account (username, password, admin) VALUES ('test', '$2b$12$4cIZeUPBt2yjH4bN6Zigfebnc8R.PliSvbCUNdc9Bna1e5FWbkHNa', FALSE);
 INSERT INTO Profile (account_id, display_name) VALUES (1, 'Dan L');
 INSERT INTO Profile (account_id, display_name) VALUES (2, 'Test User');
 INSERT INTO Tag (title) VALUES ('discussion');
