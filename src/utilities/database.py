@@ -53,3 +53,21 @@ class DatabaseManager:
         except Exception as e:
             # TODO: Rethrow.
             print(e)
+    
+    def execute_update(self, sql: str, mapping: Dict[str, str] = None):
+        try:
+            with pg.connect(dsn=self.dsn) as connection:
+                with connection.cursor() as cursor:
+                    try:
+                        if mapping is None:
+                            cursor.execute(sql)
+                        else:
+                            cursor.execute(sql, mapping)
+                    
+                    except Exception as e:
+                        # TODO: Rethrow.
+                        print(e)
+
+        except Exception as e:
+            # TODO: Rethrow.
+            print(e)
