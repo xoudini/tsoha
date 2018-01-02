@@ -1,16 +1,20 @@
 from flask import Flask
 
-from src.controllers.hello import HelloWorldController
-from src.utilities.database import DatabaseManager
+# Set up shared instances, once.
+import src.shared as shared
+shared.setup()
 
-# Required instances.
+# Controllers.
+from src.controllers.hello import HelloWorldController # TODO: remove
+from src.controllers.tag import TagController
+
+# Application instance.
 app = Flask(__name__)
-dbm = DatabaseManager(database="tsoha")
 
 # Testing database connection.
 @app.route("/connection")
 def connection():
-    return dbm.test_connection()
+    return shared.db.test_connection()
 
 @app.route("/")
 def index():
@@ -23,6 +27,14 @@ def threads():
 @app.route("/threads/1")
 def thread():
     return HelloWorldController.thread()
+
+@app.route("/tags")
+def tags():
+    return TagController.index()
+
+@app.route("/tags/<int:uid>")
+def tag(uid: int):
+    return TagController.view_for_tag(uid)
 
 @app.route("/signin")
 def signin():
