@@ -32,12 +32,6 @@ class Tag(BaseModel):
     @staticmethod
     def find_by_id(uid: int) -> 'Tag':
         rows = db.execute_query(
-            # """
-            # SELECT Tag.*, COUNT(ThreadTag.tag_id) as count FROM Tag
-            # WHERE id = %(id)s
-            # LEFT JOIN ThreadTag ON ThreadTag.tag_id = Tag.id
-            # GROUP BY Tag.id;
-            # """,
             """
             SELECT *, (
                 SELECT COUNT(*) FROM ThreadTag
