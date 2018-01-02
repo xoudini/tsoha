@@ -49,6 +49,15 @@ class Tag(BaseModel):
 
         except:
             return None
+    
+    @staticmethod
+    def create(title: str):
+        db.execute_update(
+            """
+            INSERT INTO Tag (title) VALUES (%(title)s);
+            """,
+            {'title': title}
+        )
 
 
     def __repr__(self):
