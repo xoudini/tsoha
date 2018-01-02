@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect, url_for
 
 # Set up shared instances, once.
 import src.shared as shared
@@ -35,6 +35,15 @@ def tags():
 @app.route("/tags/<int:uid>")
 def tag(uid: int):
     return TagController.view_for_tag(uid)
+
+@app.route("/tags/new", methods=['GET', 'POST'])
+def new_tag():
+    if request.method == 'GET':
+        return TagController.view_for_new_tag()
+    else:
+        title = request.form['title']
+        TagController.create_tag(title)
+        return redirect(url_for('tags'))
 
 @app.route("/signin")
 def signin():
