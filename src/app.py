@@ -18,7 +18,8 @@ def connection():
 
 @app.route("/")
 def index():
-    return HelloWorldController.index()
+    # Default to threads.
+    return redirect(url_for('threads'))
 
 @app.route("/threads")
 def threads():
