@@ -7,3 +7,6 @@ def setup():
 
     global pw
     pw = password.PasswordUtility()
+
+    global secret_key
+    secret_key = "not-the-real-key"
