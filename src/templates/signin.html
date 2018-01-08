@@ -21,7 +21,7 @@
 <form action="/signin" method="POST">
     <div class="form-group">
         <label>Username</label>
-        {% if session['username'] and not messages %}
+        {% if session['username'] and not messages['username'] %}
         <input class="form-control" type="text" name="username" value="{{session['username']}}">
         {% else %}
         <input class="form-control" type="text" name="username" value="{{messages['username']}}">
