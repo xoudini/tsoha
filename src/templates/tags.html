@@ -14,6 +14,7 @@
 
 <div class="control-group">&nbsp;</div>
 
+{% if tags %}
 <table class="table">
     <thead>
         <tr>
@@ -32,5 +33,10 @@
     </tbody>
 
 </table>
+{% else %}
+<div>
+    <h2>No tags found.</h2>
+</div>
+{% endif %}
 
 {% endblock %}
