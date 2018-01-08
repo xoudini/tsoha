@@ -27,12 +27,7 @@
         </div>
 
         <button class="btn btn-primary" type="submit">Update</button>
-    </form>
-
-    <div class="control-group">&nbsp;</div>
-
-    <form action="/tags/{{tag.uid}}/delete" method="POST">
-        <button class="btn btn-danger" type="submit">Delete</button>
+        <a class="btn btn-danger" href="/tags" value="Cancel">Cancel</a>
     </form>
 
     {% else %}

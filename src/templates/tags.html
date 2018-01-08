@@ -10,9 +10,12 @@
     <h1>Tags</h1>
 </div>
 
+
+{% if session['admin'] %}
 <a class="btn btn-primary" href="/tags/new">Create new tag</a>
 
 <div class="control-group">&nbsp;</div>
+{% endif %}
 
 {% if tags %}
 <table class="table">
@@ -20,6 +23,9 @@
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Posts</th>
+            {% if session['admin'] %}
+            <th scope="col">Actions</th>
+            {% endif %}
         </tr>
     </thead>
 
@@ -28,6 +34,15 @@
             <tr>
                 <td><a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a></td>
                 <td>{{tag.count}}</td>
+
+                {% if session['admin'] %}
+                <td>
+                    <form action="/tags/{{tag.uid}}/delete" method="POST">
+                        <a class="btn btn-primary btn-sm" href="/tags/{{tag.uid}}/edit">Edit</a>
+                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                    </form>
+                </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody>

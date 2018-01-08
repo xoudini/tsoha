@@ -7,26 +7,33 @@
 {% block body %}
 
 <div class="page-header">
-    <h1>Create new tag</h1>
+    <h1>New tag</h1>
 </div>
 
+{% if session['admin'] %}
 
-{% if messages['error'] %}
-<div class="alert alert-danger">
-    {{messages['error']}}
-</div>
-{% endif %}
-
-
-<form action="/tags/new" method="POST">
-    <div class="form-group">
-        <label>Title</label>
-        <input class="form-control" type="text" name="title" value="{{messages['title']}}">
+    {% if messages['error'] %}
+    <div class="alert alert-danger">
+        {{messages['error']}}
     </div>
-
-    <button class="btn btn-primary" type="submit">Create</button>
-</form>
+    {% endif %}
 
 
+    <form action="/tags/new" method="POST">
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" name="title" value="{{messages['title']}}">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+
+{% else %}
+
+<div class="alert alert-danger">
+    Insufficient privileges.
+</div>
+
+{% endif %}
 
 {% endblock %}
