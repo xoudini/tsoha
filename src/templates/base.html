@@ -30,7 +30,7 @@
                     <li><a href="/tags">Tags</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if session['user_id'] %}
+                    {% if session['signed_in'] %}
                     <li><a href="/profile">Signed in as <b>{{session['username']}}</b></a></li>
                     {% else %}
                     <li><a href="/signin">Sign in</a></li>

@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-{% if session['user_id'] %}
+{% if session['signed_in'] %}
 
     {% if edit %}
     <form action="/profile/edit" method="POST">
