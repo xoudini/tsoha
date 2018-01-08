@@ -65,6 +65,8 @@ def update_tag(uid: int):
     if request.method == 'GET':
         return TagController.view_for_edit_tag(uid)
     else:
+        # TODO: Admin only.
+
         title = request.form['title']
         result = TagController.update(uid, title)
         if result is None:
@@ -74,6 +76,8 @@ def update_tag(uid: int):
 
 @app.route("/tags/<int:uid>/delete", methods=['POST']) # HACK: DELETE method unavailable from jinja.
 def delete_tag(uid: int):
+    # TODO: Admin only.
+
     result = TagController.delete(uid)
     if result is None:
         return redirect(url_for('tags'))
@@ -85,6 +89,8 @@ def new_tag():
     if request.method == 'GET':
         return TagController.view_for_new_tag()
     else:
+        # TODO: Admin only.
+        
         title = request.form['title']
         result = TagController.create(title)
         if result is None:
