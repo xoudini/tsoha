@@ -5,6 +5,12 @@
 - [Documentation](doc/Documentation.pdf)
 - [Database connection test](http://viela.pw/connection)
 
+### Existing users
+| Username | Password | Admin |
+|----------|----------|-------|
+| admin    | 12345    | Yes   |
+| test     | 12345    | No    |
+
 ### Additional links
 - [List all threads](http://viela.pw/threads)
 - [View single thread](http://viela.pw/threads/1)
@@ -12,7 +18,6 @@
 - [Sign in](http://viela.pw/signin)
 - [List all tags](http://viela.pw/tags)
 - [Create new tag](http://viela.pw/tags/new)
-
 
 ### Topic outline
 
