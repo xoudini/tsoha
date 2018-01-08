@@ -10,25 +10,47 @@
     <h1>Profile</h1>
 </div>
 
-{% if edit %}
-<form action="/edit" method="post">
-    <div class="form-group">
-        <label>Display name</label>
-        <input class="form-control" type="text" value="Firstname L">
-    </div>
 
-    <button class="btn btn-success" type="submit" value="Update profile">Update</button>
-    <a class="btn btn-danger" href="/profile" value="Cancel">Cancel</a>
-</form>
+{% if messages and messages['welcome'] %}
+<div class="alert alert-success">
+    {{messages['welcome']}}
+</div>
+{% endif %}
+
+{% if session['user_id'] %}
+
+    {% if edit %}
+    <form action="/profile/edit" method="POST">
+        <div class="form-group">
+            <label>Display name</label>
+            {% if account %}
+            <input class="form-control" type="text" value="{{account.display_name}}">
+            {% else %}
+            <input class="form-control" type="text" value="{{session['display_name']}}">
+            {% endif %}
+        </div>
+
+        <button class="btn btn-success" type="submit" value="Update profile">Update</button>
+        <a class="btn btn-danger" href="/profile" value="Cancel">Cancel</a>
+    </form>
+    {% else %}
+    <form action="/signout" method="POST">
+        <div class="form-group">
+            <label>Display name</label>
+            {% if account %}
+            <p>{{account.display_name}}</p>
+            {% else %}
+            <p><i>No display name set.</i></p>
+            {% endif %}
+        </div>
+
+        <a class="btn btn-primary" href="/profile/edit">Edit</a>
+        <button class="btn btn-danger" type="submit">Sign out</button>
+    </form>
+    {% endif %}
+
 {% else %}
-<form action="/profile/edit" method="get">
-    <div class="form-group">
-        <label>Display name</label>
-        <p>Firstname L</p>
-    </div>
-
-    <button class="btn btn-primary" type="submit" value="Edit profile">Edit</button>
-</form>
+not signed in.
 {% endif %}
 
 {% endblock %}

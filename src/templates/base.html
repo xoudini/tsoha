@@ -28,10 +28,13 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/threads">Threads</a></li>
                     <li><a href="/tags">Tags</a></li>
-                    <li><a href="/profile">Profile</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    {% if session['user_id'] %}
+                    <li><a href="/profile">{{session['username']}}</a></li>
+                    {% else %}
                     <li><a href="/signin">Sign in</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

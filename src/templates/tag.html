@@ -11,17 +11,18 @@
     <h1>{{tag.title}}</h1>
 </div>
 
+{% if session['admin'] %}
 <a class="btn btn-primary" href="/tags/{{tag.uid}}/edit">Edit tag</a>
-
 <div class="control-group">&nbsp;</div>
+{% endif %}
 
 <div>
     <a href="#"><span class="badge badge-primary badge-pill">{{tag.count}}</span> post{% if tag.count != 1 %}s{% endif %}</a>
 </div>
 
 {% else %}
-<div class="page-header">
-    <h1>Tag not found</h1>
+<div>
+    <h2>Tag not found</h2>
 </div>
 {% endif %}
 

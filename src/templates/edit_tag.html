@@ -6,40 +6,49 @@
 
 {% block body %}
 
-{% if tag %}
 <div class="page-header">
     <h1>Edit tag</h1>
 </div>
 
+{% if session['admin'] %}
 
-{% if messages['error'] %}
-<div class="alert alert-danger">
-    {{messages['error']}}
-</div>
-{% endif %}
+    {% if messages['error'] %}
+    <div class="alert alert-danger">
+        {{messages['error']}}
+    </div>
+    {% endif %}
 
+    {% if tag %}
 
-<form action="/tags/{{tag.uid}}/edit" method="POST">
-    <div class="form-group">
-        <label>Title</label>
-        <input class="form-control" type="text" name="title" value="{{tag.title}}">
+    <form action="/tags/{{tag.uid}}/edit" method="POST">
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" name="title" value="{{tag.title}}">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Update</button>
+    </form>
+
+    <div class="control-group">&nbsp;</div>
+
+    <form action="/tags/{{tag.uid}}/delete" method="POST">
+        <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+
+    {% else %}
+
+    <div>
+        <h2>Tag not found</h2>
     </div>
 
-    <button class="btn btn-primary" type="submit">Update</button>
-</form>
-
-<div class="control-group">&nbsp;</div>
-
-<form action="/tags/{{tag.uid}}/delete" method="POST">
-    <button class="btn btn-danger" type="submit">Delete</button>
-</form>
-
+    {% endif %}
 
 {% else %}
-<div class="page-header">
-    <h1>Tag not found</h1>
-</div>
-{% endif %}
 
+<div class="alert alert-danger">
+    Insufficient privileges.
+</div>
+
+{% endif %}
 
 {% endblock %}
