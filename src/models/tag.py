@@ -5,10 +5,13 @@ from typing import List
 
 class Tag(BaseModel):
 
-    def __init__(self, uid: int, title: str, count: int):
+    def __init__(self, uid: int, title: str, count: int = None):
         self.uid = uid
         self.title = title
         self.count = count
+    
+    def valid(self) -> bool:
+        return self.title
     
     @staticmethod
     def all() -> List['Tag']:
@@ -51,13 +54,70 @@ class Tag(BaseModel):
             return None
     
     @staticmethod
-    def create(title: str):
+    def find_by_title(title: str) -> 'Tag':
+        rows = db.execute_query(
+            """
+            SELECT *, (
+                SELECT COUNT(*) FROM ThreadTag
+                WHERE ThreadTag.tag_id = Tag.id
+            ) AS count FROM Tag
+            WHERE title = %(title)s;
+            """,
+            {'title': title}
+        )
+
+        try:
+            row = rows.pop(0)
+            tag = Tag(row['id'], row['title'], row['count'])
+            return tag
+
+        except:
+            return None
+    
+    def create(self):
+        if not self.valid():
+            return {'error': "Invalid tag.", 'title': self.title}
+
+        if Tag.find_by_title(self.title) is not None:
+            return {'error': "Tag with that title already exists.", 'title': self.title}
+
         db.execute_update(
             """
             INSERT INTO Tag (title) VALUES (%(title)s);
             """,
-            {'title': title}
+            {'title': self.title}
         )
+    
+    def update(self):
+        if not self.valid():
+            return {'error': "Invalid tag.", 'title': self.title}
+
+        if Tag.find_by_title(self.title) is not None:
+            return {'error': "Tag with that title already exists.", 'title': self.title}
+
+        if Tag.find_by_id(self.uid) is None:
+            return {'error': "Tag doesn't exist.", 'title': self.title}
+
+        db.execute_update(
+            """
+            UPDATE Tag SET title = %(title)s 
+            WHERE id = %(id)s;
+            """,
+            {'id': self.uid, 'title': self.title}
+        )
+    
+    def delete(self):
+        if Tag.find_by_id(self.uid) is None:
+            return {'error': "Tag doesn't exist."}
+
+        db.execute_update(
+            """
+            DELETE FROM Tag 
+            WHERE id = %(id)s;
+            """,
+            {'id': self.uid}
+        )
+
 
 
     def __repr__(self):

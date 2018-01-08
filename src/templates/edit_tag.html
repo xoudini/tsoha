@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+{% if tag %}
+<div class="page-header">
+    <h1>Edit tag</h1>
+</div>
+
+
+{% if messages['error'] %}
+<div class="alert alert-danger">
+    {{messages['error']}}
+</div>
+{% endif %}
+
+
+<form action="/tags/{{tag.uid}}/edit" method="POST">
+    <div class="form-group">
+        <label>Title</label>
+        <input class="form-control" type="text" name="title" value="{{tag.title}}">
+    </div>
+
+    <button class="btn btn-primary" type="submit">Update</button>
+</form>
+
+<div class="control-group">&nbsp;</div>
+
+<form action="/tags/{{tag.uid}}/delete" method="POST">
+    <button class="btn btn-danger" type="submit">Delete</button>
+</form>
+
+
+{% else %}
+<div class="page-header">
+    <h1>Tag not found</h1>
+</div>
+{% endif %}
+
+
+{% endblock %}
