@@ -31,7 +31,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if session['user_id'] %}
-                    <li><a href="/profile">{{session['username']}}</a></li>
+                    <li><a href="/profile">Signed in as <b>{{session['username']}}</b></a></li>
                     {% else %}
                     <li><a href="/signin">Sign in</a></li>
                     {% endif %}
