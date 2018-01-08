@@ -12,6 +12,9 @@ class Account(BaseModel):
 
     @staticmethod
     def authenticate(username: str, password: str):
+        if not (username and password):
+            return {'error': "Neither field can be empty.", 'username': username}
+
         rows = db.execute_query(
             """
             SELECT * FROM Account WHERE username = %(username)s;
