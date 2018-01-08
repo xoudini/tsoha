@@ -11,6 +11,10 @@
     <h1>{{tag.title}}</h1>
 </div>
 
+<a class="btn btn-primary" href="/tags/{{tag.uid}}/edit">Edit tag</a>
+
+<div class="control-group">&nbsp;</div>
+
 <div>
     <a href="#"><span class="badge badge-primary badge-pill">{{tag.count}}</span> post{% if tag.count != 1 %}s{% endif %}</a>
 </div>
