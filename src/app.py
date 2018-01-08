@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, session
+from flask import Flask, request, redirect, abort, url_for, session
 
 # Set up shared instances, once.
 import src.shared as shared
@@ -15,6 +15,9 @@ app.secret_key = shared.secret_key
 
 
 # Convenience methods for session.
+def signed_in():
+    return session['signed_in'] if 'signed_in' in session else False
+
 def get_user_id() -> int:
     if 'user_id' in session:
         return session['user_id']
@@ -26,6 +29,9 @@ def get_username() -> str:
 def get_display_name() -> str:
     if 'display_name' in session:
         return session['display_name']
+
+def admin_session() -> bool:
+    return session['admin'] if 'admin' in session else False
 
 
 ### Testing database connection ###
@@ -65,7 +71,9 @@ def update_tag(uid: int):
     if request.method == 'GET':
         return TagController.view_for_edit_tag(uid)
     else:
-        # TODO: Admin only.
+        # Admin only.
+        if not admin_session():
+            abort(403)
 
         title = request.form['title']
         result = TagController.update(uid, title)
@@ -76,7 +84,9 @@ def update_tag(uid: int):
 
 @app.route("/tags/<int:uid>/delete", methods=['POST']) # HACK: DELETE method unavailable from jinja.
 def delete_tag(uid: int):
-    # TODO: Admin only.
+    # Admin only.
+    if not admin_session():
+        abort(403)
 
     result = TagController.delete(uid)
     if result is None:
@@ -89,8 +99,10 @@ def new_tag():
     if request.method == 'GET':
         return TagController.view_for_new_tag()
     else:
-        # TODO: Admin only.
-        
+        # Admin only.
+        if not admin_session():
+            abort(403)
+
         title = request.form['title']
         result = TagController.create(title)
         if result is None:
@@ -103,6 +115,10 @@ def new_tag():
 
 @app.route("/signin", methods=['GET', 'POST'])
 def signin():
+    # Redirect if already signed in.
+    if signed_in():
+        return redirect(url_for('profile'))
+
     if request.method == 'GET':
         return AccountController.view_for_signin()
     else:
@@ -112,6 +128,7 @@ def signin():
         if 'user' in result:
             # TODO: Make account serializable.
             account = result['user']
+            session['signed_in'] = True
             session['user_id'] = account.uid
             session['username'] = account.username
             session['display_name'] = account.display_name
@@ -123,6 +140,10 @@ def signin():
 
 @app.route("/signout", methods=['POST'])
 def signout():
+    if not signed_in():
+        abort(401)
+
+    session.pop('signed_in', None)
     session.pop('user_id', None)
     session.pop('display_name', None)
     session.pop('admin', None)
@@ -130,6 +151,9 @@ def signout():
 
 @app.route("/profile")
 def profile():
+    if not signed_in():
+        return redirect(url_for('signin'))
+
     if 'fresh_signin' in session:
         name = get_display_name() if get_display_name() else get_username()
         session.pop('fresh_signin')
