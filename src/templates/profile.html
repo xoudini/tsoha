@@ -23,11 +23,7 @@
     <form action="/profile/edit" method="POST">
         <div class="form-group">
             <label>Display name</label>
-            {% if account %}
-            <input class="form-control" type="text" value="{{account.display_name}}">
-            {% else %}
-            <input class="form-control" type="text" value="{{session['display_name']}}">
-            {% endif %}
+            <input class="form-control" type="text" name="display_name" value="{{account.display_name}}">
         </div>
 
         <button class="btn btn-success" type="submit" value="Update profile">Update</button>
