@@ -14,7 +14,8 @@ app = Flask(__name__)
 app.secret_key = shared.secret_key
 
 
-# Convenience methods for session.
+### Convenience methods for session. ###
+
 def signed_in():
     return session['signed_in'] if 'signed_in' in session else False
 
@@ -77,6 +78,7 @@ def update_tag(uid: int):
 
         title = request.form['title']
         result = TagController.update(uid, title)
+
         if result is None:
             return redirect(url_for('tags'))
         else:
@@ -89,6 +91,7 @@ def delete_tag(uid: int):
         abort(403)
 
     result = TagController.delete(uid)
+
     if result is None:
         return redirect(url_for('tags'))
     else:
@@ -105,6 +108,7 @@ def new_tag():
 
         title = request.form['title']
         result = TagController.create(title)
+
         if result is None:
             return redirect(url_for('tags'))
         else:
@@ -140,6 +144,7 @@ def signin():
 
 @app.route("/signout", methods=['POST'])
 def signout():
+    # Abort if not signed in.
     if not signed_in():
         abort(401)
 
