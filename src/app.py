@@ -166,9 +166,21 @@ def profile():
     
     return AccountController.view_for_profile(get_user_id())
 
-@app.route("/profile/edit")
-def editprofile():
-    return HelloWorldController.editprofile()
+@app.route("/profile/edit", methods=['GET', 'POST'])
+def udpate_profile():
+    if not signed_in():
+        return redirect(url_for('signin'))
+
+    if request.method == "GET":
+        return AccountController.view_for_edit_profile(get_user_id())
+    else:
+        display_name = request.form['display_name']
+        result = AccountController.update(get_user_id(), display_name)
+
+        if result is None:
+            return redirect(url_for('profile'))
+        else:
+            return AccountController.view_for_edit_profile(get_user_id(), result)
 
 
 
