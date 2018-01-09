@@ -10,7 +10,6 @@
     <h1>Profile</h1>
 </div>
 
-
 {% if messages and messages['welcome'] %}
 <div class="alert alert-success">
     {{messages['welcome']}}
@@ -20,6 +19,7 @@
 {% if session['signed_in'] %}
 
     {% if edit %}
+
     <form action="/profile/edit" method="POST">
         <div class="form-group">
             <label>Display name</label>
@@ -33,7 +33,9 @@
         <button class="btn btn-success" type="submit" value="Update profile">Update</button>
         <a class="btn btn-danger" href="/profile" value="Cancel">Cancel</a>
     </form>
+
     {% else %}
+
     <form action="/signout" method="POST">
         <div class="form-group">
             <label>Display name</label>
@@ -47,12 +49,15 @@
         <a class="btn btn-primary" href="/profile/edit">Edit</a>
         <button class="btn btn-danger" type="submit">Sign out</button>
     </form>
+
     {% endif %}
 
 {% else %}
+
 <div class="alert alert-danger">
     Not signed in.
 </div>
+
 {% endif %}
 
 {% endblock %}

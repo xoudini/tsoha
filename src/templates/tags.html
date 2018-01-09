@@ -10,14 +10,13 @@
     <h1>Tags</h1>
 </div>
 
-
 {% if session['admin'] %}
 <a class="btn btn-primary" href="/tags/new">Create new tag</a>
-
 <div class="control-group">&nbsp;</div>
 {% endif %}
 
 {% if tags %}
+
 <table class="table">
     <thead>
         <tr>
@@ -43,15 +42,19 @@
                     </form>
                 </td>
                 {% endif %}
+                
             </tr>
         {% endfor %}
     </tbody>
 
 </table>
+
 {% else %}
+
 <div>
     <h2>No tags found.</h2>
 </div>
+
 {% endif %}
 
 {% endblock %}

@@ -10,13 +10,11 @@
     <h1>Sign in</h1>
 </div>
 
-
 {% if messages['error'] %}
 <div class="alert alert-danger">
     {{messages['error']}}
 </div>
 {% endif %}
-
 
 <form action="/signin" method="POST">
     <div class="form-group">
