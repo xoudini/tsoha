@@ -1,12 +1,13 @@
 from src.models.base import BaseModel
 from src.shared import db, pw
 
+from string import ascii_letters
+
 class Account(BaseModel):
     
     def __init__(self, uid: int, username: str, display_name: str = None, admin: bool = False):
         self.uid = uid
         self.username = username
-        # self.password_hash = password_hash
         self.display_name = display_name
         self.admin = admin
 
@@ -15,11 +16,17 @@ class Account(BaseModel):
         if not (username and password):
             return {'error': "Neither field can be empty.", 'username': username}
 
+        if not (1 <= len(username) <= 16):
+            return {'error': "Username must be between 1 and 16 characters.", 'username': username}
+
+        if any(character not in ascii_letters for character in username):
+            return {'error': "Username can only contain alphabetic characters.", 'username': username}
+
         rows = db.execute_query(
             """
             SELECT * FROM Account WHERE username = %(username)s;
             """,
-            {'username': username}
+            {'username': username.lower()}
         )
 
         try:
@@ -50,3 +57,15 @@ class Account(BaseModel):
 
         except:
             return None
+    
+    def update(self):
+        if Account.find_by_id(self.uid) is None:
+            return {'error': "Account doesn't exist.", 'display_name': self.display_name}
+
+        db.execute_update(
+            """
+            UPDATE Account SET display_name = %(display_name)s 
+            WHERE id = %(id)s;
+            """,
+            {'id': self.uid, 'display_name': self.display_name}
+        )

@@ -20,3 +20,14 @@ class AccountController(BaseController):
     def view_for_profile(uid: int, messages: Dict[str, str] = None):
         account = Account.find_by_id(uid)
         return render_template('profile.html', title="Profile", messages=messages, account=account)
+    
+    @staticmethod
+    def view_for_edit_profile(uid: int, messages: Dict[str, str] = None):
+        account = Account.find_by_id(uid)
+        return render_template('profile.html', title="Profile", messages=messages, account=account, edit=True)
+
+    @staticmethod
+    def update(uid: int, display_name: str):
+        account = Account(uid, None, display_name)
+        result = account.update()
+        return result
