@@ -43,5 +43,3 @@ class TagController(BaseController):
         tag = Tag(uid, None)
         result = tag.delete()
         return result
-        
-
