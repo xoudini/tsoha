@@ -73,5 +73,37 @@ class Thread(BaseModel):
             return thread
 
         except:
-            return None    
+            return None
+
+    @staticmethod
+    def create(author_id: int, title: str, content: str, tag_ids: List[int]):
+        result = db.execute_update(
+            """
+            INSERT INTO Thread (author_id, title, created)
+            VALUES (%(author_id)s, %(title)s, NOW() AT TIME ZONE 'UTC')
+            RETURNING id, created;
+            """,
+            {'author_id': author_id, 'title': title}
+        )
+
+        print("Result of insert:", result)
+
+        if not ('id' in result and 'created' in result):
+            return {'error': "Something went wrong."}
+
+        thread_id = result['id']
+        created = result['created']
+
+        Response.create(author_id, thread_id, content, created)
+
+        for tag_id in tag_ids:
+            db.execute_update(
+                """
+                INSERT INTO ThreadTag (tag_id, thread_id)
+                VALUES (%(tag_id)s, %(thread_id)s);
+                """,
+                {'tag_id': tag_id, 'thread_id': thread_id}
+            )
+        
+        return {'thread_id': thread_id}
     
