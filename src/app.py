@@ -42,6 +42,7 @@ def admin_session() -> bool:
 def connection():
     return shared.db.test_connection()
 
+
 ### Thread endpoints ###
 
 @app.route("/")
@@ -56,6 +57,30 @@ def threads():
 @app.route("/threads/<int:uid>")
 def thread(uid: int):
     return ThreadController.view_for_thread(uid)
+
+@app.route("/threads/<int:uid>/edit", methods=['GET', 'POST']) # HACK: PUT method unavailable from jinja.
+def update_thread(uid: int):
+    pass
+
+@app.route("/threads/<int:uid>/delete", methods=['POST']) # HACK: DELETE method unavailable from jinja.
+def delete_thread(uid: int):
+    # Abort if not signed in.
+    if not signed_in():
+        abort(401)
+    
+    author_id = ThreadController.author_for_thread(uid)
+
+    # Abort if author_id wasn't found.
+    if author_id is None:
+        abort(404)
+    
+    # Abort if privileges aren't sufficient.
+    if not (admin_session() or author_id == get_user_id()):
+        abort(403)
+    
+    ThreadController.delete(uid)
+
+    return redirect(url_for('threads'))
 
 @app.route("/threads/new", methods=['GET', 'POST'])
 def new_thread():
