@@ -54,6 +54,26 @@ class Tag(BaseModel):
             return None
     
     @staticmethod
+    def find_by_thread_id(thread_id: int) -> List['Tag']:
+        rows = db.execute_query(
+            """
+            SELECT Tag.* FROM Tag
+            INNER JOIN ThreadTag ON ThreadTag.thread_id = %(thread_id)s
+            AND ThreadTag.tag_id = Tag.id
+            ORDER BY title;
+            """,
+            {'thread_id': thread_id}
+        )
+
+        result = []
+
+        for row in rows:
+            tag = Tag(row['id'], row['title'])
+            result.append(tag)
+        
+        return result
+    
+    @staticmethod
     def find_by_title(title: str) -> 'Tag':
         rows = db.execute_query(
             """
