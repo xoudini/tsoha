@@ -24,6 +24,14 @@ class ThreadController(BaseController):
         return render_template('new_thread.html', title="New thread", tags=tags, messages=messages)
 
     @staticmethod
+    def author_for_thread(uid: int):
+        return Thread.author_for_thread(uid)
+
+    @staticmethod
     def create(user_id: int, title: str, content: str, tag_ids: List[int]):
         result = Thread.create(user_id, title, content, tag_ids)
         return result
+
+    @staticmethod
+    def delete(uid: int):
+        Thread.delete(uid)
