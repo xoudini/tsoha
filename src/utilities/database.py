@@ -6,7 +6,7 @@ from typing import List, Dict, Tuple
 class DatabaseManager:
 
     def __init__(self, database: str, user: str = None, password: str = None, host: str = None, port: int = None):
-        paramlist: List[str] = []
+        paramlist = []
 
         if database is not None:
             paramlist.append("dbname=" + database)
@@ -23,7 +23,7 @@ class DatabaseManager:
         if port is not None:
             paramlist.append("port=" + str(port))
         
-        self.dsn: str = " ".join(paramlist)
+        self.dsn = " ".join(paramlist)
     
     def test_connection(self) -> str:
         try:
@@ -43,7 +43,6 @@ class DatabaseManager:
                             cursor.execute(sql, mapping)
 
                         rows = cursor.fetchall()
-
                         return rows
 
                     except Exception as e:
@@ -54,15 +53,19 @@ class DatabaseManager:
             # TODO: Rethrow.
             print(e)
     
-    def execute_update(self, sql: str, mapping: Dict[str, str] = None):
+    def execute_update(self, sql: str, mapping: Dict[str, str] = None) -> Tuple:
         try:
             with pg.connect(dsn=self.dsn) as connection:
-                with connection.cursor() as cursor:
+                with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                     try:
                         if mapping is None:
                             cursor.execute(sql)
                         else:
                             cursor.execute(sql, mapping)
+
+                        # Fetching last insert if marked RETURNING:
+                        last = cursor.fetchone()
+                        return last
                     
                     except Exception as e:
                         # TODO: Rethrow.
