@@ -8,6 +8,7 @@ shared.setup()
 from src.controllers.hello import HelloWorldController # TODO: remove
 from src.controllers.account import AccountController
 from src.controllers.tag import TagController
+from src.controllers.thread import ThreadController
 
 # Application instance.
 app = Flask(__name__)
@@ -50,11 +51,15 @@ def index():
 
 @app.route("/threads")
 def threads():
-    return HelloWorldController.threads()
+    return ThreadController.index()
 
-@app.route("/threads/1")
-def thread():
-    return HelloWorldController.thread()
+@app.route("/threads/<int:uid>")
+def thread(uid: int):
+    return ThreadController.view_for_thread(uid)
+
+@app.route("/threads/new")
+def new_thread():
+    return "New thread"
 
 
 ### Tag endpoints ###
@@ -181,6 +186,10 @@ def udpate_profile():
             return redirect(url_for('profile'))
         else:
             return AccountController.view_for_edit_profile(get_user_id(), result)
+
+@app.route("/user/<int:uid>")
+def user(uid: int):
+    return "User " + str(uid)
 
 
 
