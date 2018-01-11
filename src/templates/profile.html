@@ -16,6 +16,12 @@
 </div>
 {% endif %}
 
+{% if messages and messages['error'] %}
+<div class="alert alert-danger">
+    {{messages['error']}}
+</div>
+{% endif %}
+
 {% if session['signed_in'] %}
 
     {% if edit %}
@@ -23,7 +29,7 @@
     <form action="/profile/edit" method="POST">
         <div class="form-group">
             <label>Display name</label>
-            <input class="form-control" type="text" name="display_name" value="{{account.display_name}}">
+            <input class="form-control" type="text" name="display_name" value="{% if messages and messages['display_name'] %}{{messages['display_name']}}{% elif account.display_name %}{{account.display_name}}{% endif %}">
         </div>
 
         <button class="btn btn-success" type="submit" value="Update profile">Update</button>
@@ -35,7 +41,7 @@
     <form action="/signout" method="POST">
         <div class="form-group">
             <label>Display name</label>
-            {% if account %}
+            {% if account.display_name %}
             <p>{{account.display_name}}</p>
             {% else %}
             <p><i>No display name set.</i></p>
