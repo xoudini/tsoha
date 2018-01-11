@@ -57,9 +57,25 @@ def threads():
 def thread(uid: int):
     return ThreadController.view_for_thread(uid)
 
-@app.route("/threads/new")
+@app.route("/threads/new", methods=['GET', 'POST'])
 def new_thread():
-    return "New thread"
+    if request.method == 'GET':
+        return ThreadController.view_for_new_thread()
+    else:
+        # Abort if not signed in.
+        if not signed_in():
+            abort(401)
+
+        title = request.form['title']
+        content = request.form['content']
+        tag_ids = request.form.getlist('tags')
+
+        result = ThreadController.create(get_user_id(), title, content, tag_ids)
+        
+        if 'thread_id' in result:
+            return redirect(url_for('thread', uid=result['thread_id']))
+        else:
+            return ThreadController.view_for_new_thread(result)
 
 
 ### Tag endpoints ###
@@ -189,6 +205,9 @@ def udpate_profile():
 
 @app.route("/user/<int:uid>")
 def user(uid: int):
+    if signed_in() and uid == get_user_id():
+        return redirect(url_for('profile'))
+
     return "User " + str(uid)
 
 
