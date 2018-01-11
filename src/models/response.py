@@ -38,3 +38,13 @@ class Response(BaseModel):
             result.append(response)
         
         return result
+    
+    @staticmethod
+    def create(author_id: int, thread_id: int, content: str, created: datetime):
+        db.execute_update(
+            """
+            INSERT INTO Response (author_id, thread_id, content, created)
+            VALUES (%(author_id)s, %(thread_id)s, %(content)s, %(created)s);
+            """,
+            {'author_id': author_id, 'thread_id': thread_id, 'content': content, 'created': created}
+        )
