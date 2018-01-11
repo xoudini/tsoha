@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <h1>New thread</h1>
+</div>
+
+{% if session['signed_in'] %}
+
+    {% if messages['error'] %}
+    <div class="alert alert-danger">
+        {{messages['error']}}
+    </div>
+    {% endif %}
+
+    <form action="/threads/new" method="POST">
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" name="title" value="{{messages['title']}}">
+
+            <label>Content</label>
+            <textarea class="form-control" rows="6" name="content">{{messages['content']}}</textarea>
+
+            {% if tags %}
+            
+            <label>Tags</label>
+            <select class="form-control" name="tags" multiple="">
+                {% for tag in tags %}
+                <option value="{{tag.uid}}">{{tag.title}}</option>
+                {% endfor %}
+            </select>
+
+            {% else %}
+
+            {% if session['admin'] %}
+            <a class="btn btn-primary" href="/tags/new">Create new tag</a>
+            {% else %}
+            <i>No tags found.</i>
+            {% endif %}
+
+            {%endif%}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+
+{% else %}
+
+<div class="alert alert-danger">
+    You must be signed in to create a new thread.
+</div>
+
+{% endif %}
+
+{% endblock %}
