@@ -74,6 +74,22 @@ class Thread(BaseModel):
 
         except:
             return None
+    
+    @staticmethod
+    def author_for_thread(uid: int) -> int:
+        rows = db.execute_query(
+            """
+            SELECT author_id FROM Thread
+            WHERE id = %(id)s;
+            """,
+            {'id': uid}
+        )
+
+        try:
+            row = rows.pop(0)
+            return row['author_id']
+        except:
+            return None
 
     @staticmethod
     def create(author_id: int, title: str, content: str, tag_ids: List[int]):
@@ -106,4 +122,14 @@ class Thread(BaseModel):
             )
         
         return {'thread_id': thread_id}
+
+    @staticmethod
+    def delete(uid: int):
+        db.execute_update(
+            """
+            DELETE FROM Thread
+            WHERE id = %(id)s;
+            """,
+            {'id': uid}
+        )
     
