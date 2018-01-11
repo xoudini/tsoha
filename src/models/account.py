@@ -62,10 +62,13 @@ class Account(BaseModel):
         if Account.find_by_id(self.uid) is None:
             return {'error': "Account doesn't exist.", 'display_name': self.display_name}
 
+        if not (len(self.display_name) <= 50):
+            return {'error': "Display name must be shorter than 50 characters.", 'display_name': self.display_name}
+
         db.execute_update(
             """
             UPDATE Account SET display_name = %(display_name)s 
             WHERE id = %(id)s;
             """,
-            {'id': self.uid, 'display_name': self.display_name}
+            {'id': self.uid, 'display_name': None if not self.display_name else self.display_name}
         )
