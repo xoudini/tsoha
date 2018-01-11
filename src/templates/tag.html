@@ -13,7 +13,10 @@
 </div>
 
 {% if session['admin'] %}
-<a class="btn btn-primary" href="/tags/{{tag.uid}}/edit">Edit tag</a>
+<form action="/tags/{{tag.uid}}/delete" method="POST">
+    <a class="btn btn-primary" href="/tags/{{tag.uid}}/edit">Edit tag</a>
+    <button class="btn btn-danger" type="submit">Delete</button>
+</form>
 <div class="control-group">&nbsp;</div>
 {% endif %}
 
