@@ -27,7 +27,7 @@
 
 {% if session['admin'] or session['user_id'] == thread.author.uid %}
 <form action="/threads/{{thread.uid}}/delete" method="POST">
-    <!-- <a class="btn btn-primary" href="/threads/{{thread.uid}}/edit">Edit tags</a> -->
+    <a class="btn btn-primary" href="/threads/{{thread.uid}}/edit">Edit</a>
     <button class="btn btn-danger" type="submit">Delete</button>
 </form>
 <div class="control-group">&nbsp;</div>
