@@ -1,15 +1,17 @@
 from src.models.base import BaseModel
 from src.shared import db, pw
 
+from typing import List
 from string import ascii_letters
 
 class Account(BaseModel):
     
-    def __init__(self, uid: int, username: str, display_name: str = None, admin: bool = False):
+    def __init__(self, uid: int, username: str, display_name: str = None, admin: bool = False, threads: List = None):
         self.uid = uid
         self.username = username
         self.display_name = display_name
         self.admin = admin
+        self.threads = threads
 
     @staticmethod
     def authenticate(username: str, password: str):
@@ -20,7 +22,7 @@ class Account(BaseModel):
             return {'error': "Username must be between 1 and 16 characters.", 'username': username}
 
         if any(character not in ascii_letters for character in username):
-            return {'error': "Username can only contain alphabetic characters.", 'username': username}
+            return {'error': "Username must contain only alphabetic characters.", 'username': username}
 
         rows = db.execute_query(
             """
@@ -52,7 +54,12 @@ class Account(BaseModel):
 
         try:
             row = rows.pop(0)
-            account = Account(row['id'], row['username'], row['display_name'], row['admin'])
+
+            # Deferred in order to prevent circular imports.
+            from src.models.thread import Thread
+
+            threads = Thread.find_by_author_id(row['id'])
+            account = Account(row['id'], row['username'], row['display_name'], row['admin'], threads)
             return account
 
         except:
