@@ -18,7 +18,7 @@ class Thread(BaseModel):
         self.title = title
         self.created = "{0:%Y/%m/%d %H:%M}".format(created)
         self.last_active = "{0:%Y/%m/%d %H:%M}".format(last_active) if last_active else None
-        self.response_count = response_count
+        self.response_count = response_count - 1 # Thread starter shouldn't count as a response.
         self.responses = responses
     
     @staticmethod
@@ -45,8 +45,6 @@ class Thread(BaseModel):
             tags = Tag.find_by_thread_id(row['id'])
             thread = Thread(row['id'], account, tags, row['title'], row['created'], row['last_active'], row['response_count'])
             result.append(thread)
-            # tag = Tag(row['id'], row['title'], row['count'])
-            # result.append(tag)
         
         return result
     
