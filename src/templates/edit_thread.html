@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <h1>Edit thread</h1>
+</div>
+
+{% if session['admin'] or session['user_id'] == thread.author.uid %}
+
+    {% if messages['error'] %}
+    <div class="alert alert-danger">
+        {{messages['error']}}
+    </div>
+    {% endif %}
+
+    <form action="/threads/{{thread.uid}}/edit" method="POST">
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" name="title" value="{% if messages['title'] %}{{messages['title']}}{% else %}{{thread.title}}{% endif %}">
+
+            {% if tags %}
+            
+            <label>Tags</label>
+            <select class="form-control" name="tags" multiple="">
+                {% for tag in tags %}
+                    {% if tag in thread.tags %}
+                    <option value="{{tag.uid}}" selected>{{tag.title}}</option>
+                    {% else %}
+                    <option value="{{tag.uid}}">{{tag.title}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            {% else %}
+
+            {% if session['admin'] %}
+            <a class="btn btn-primary" href="/tags/new">Create new tag</a>
+            {% else %}
+            <i>No tags found.</i>
+            {% endif %}
+
+            {%endif%}
+        </div>
+
+        <button class="btn btn-primary" type="submit">Update</button>
+        <a class="btn btn-danger" href="/threads/{{thread.uid}}" value="Cancel">Cancel</a>
+    </form>
+
+{% else %}
+
+<div class="alert alert-danger">
+    Insufficient privileges.
+</div>
+
+{% endif %}
+
+{% endblock %}
