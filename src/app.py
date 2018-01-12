@@ -60,7 +60,31 @@ def thread(uid: int):
 
 @app.route("/threads/<int:uid>/edit", methods=['GET', 'POST']) # HACK: PUT method unavailable from jinja.
 def update_thread(uid: int):
-    pass
+    if request.method == 'GET':
+        return ThreadController.view_for_edit_thread(uid)
+    else:
+        if not signed_in():
+            abort(401)
+        
+        author_id = ThreadController.author_for_thread(uid)
+
+        # Abort if author_id wasn't found.
+        if author_id is None:
+            abort(404)
+        
+        # Abort if privileges aren't sufficient.
+        if not (admin_session() or author_id == get_user_id()):
+            abort(403)
+
+        title = request.form['title']
+        tag_ids = request.form.getlist('tags')
+        
+        result = ThreadController.update(uid, title, tag_ids)
+
+        if result is None:
+            return redirect(url_for('thread', uid=uid))
+        else:
+            return ThreadController.view_for_edit_thread(uid, result)
 
 @app.route("/threads/<int:uid>/delete", methods=['POST']) # HACK: DELETE method unavailable from jinja.
 def delete_thread(uid: int):
