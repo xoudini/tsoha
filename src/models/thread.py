@@ -18,7 +18,7 @@ class Thread(BaseModel):
         self.title = title
         self.created = "{0:%Y/%m/%d %H:%M}".format(created)
         self.last_active = "{0:%Y/%m/%d %H:%M}".format(last_active) if last_active else None
-        self.response_count = response_count - 1 # Thread starter shouldn't count as a response.
+        self.response_count = response_count - 1 if response_count else None # Thread starter shouldn't count as a response.
         self.responses = responses
     
     @staticmethod
