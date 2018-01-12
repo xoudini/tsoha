@@ -10,6 +10,11 @@ class Tag(BaseModel):
         self.title = title
         self.count = count
     
+    def __eq__(self, other):
+        if isinstance(self, other.__class__):
+            return self.uid == other.uid
+        return False
+    
     def valid(self) -> bool:
         return self.title
     
