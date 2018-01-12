@@ -93,6 +93,17 @@ class Thread(BaseModel):
 
     @staticmethod
     def create(author_id: int, title: str, content: str, tag_ids: List[int]):
+        if not title:
+            return {'error': "Title can't be empty."}
+
+        if not content:
+            return {'error': "Content can't be empty."}
+
+        try:
+            tag_ids = list(int(tag_id) for tag_id in tag_ids)
+        except:
+            return {'error': "Invalid formatting."}
+
         result = db.execute_update(
             """
             INSERT INTO Thread (author_id, title, created)
@@ -122,6 +133,48 @@ class Thread(BaseModel):
             )
         
         return {'thread_id': thread_id}
+
+    @staticmethod
+    def update(uid: int, title: str, tag_ids: List[int]):
+        if not title:
+            return {'error': "Title can't be empty."}
+
+        try:
+            tag_ids = list(int(tag_id) for tag_id in tag_ids)
+        except:
+            return {'error': "Invalid formatting."}
+
+        db.execute_update(
+            """
+            UPDATE Thread SET title = %(title)s
+            WHERE id = %(id)s;
+            """,
+            {'id': uid, 'title': title}
+        )
+
+        existing_tags = Tag.find_by_thread_id(uid)
+        existing_tag_ids = list(t.uid for t in existing_tags) if existing_tags else []
+
+        for tag_id in tag_ids:
+            if tag_id not in existing_tag_ids:
+                db.execute_update(
+                    """
+                    INSERT INTO ThreadTag (tag_id, thread_id)
+                    VALUES (%(tag_id)s, %(thread_id)s);
+                    """,
+                    {'tag_id': tag_id, 'thread_id': uid}
+                )
+            
+        for existing_tag_id in existing_tag_ids:
+            if existing_tag_id not in tag_ids:
+                db.execute_update(
+                    """
+                    DELETE FROM ThreadTag
+                    WHERE tag_id = %(tag_id)s
+                    AND thread_id = %(thread_id)s;
+                    """,
+                    {'tag_id': existing_tag_id, 'thread_id': uid}
+                )
 
     @staticmethod
     def delete(uid: int):
