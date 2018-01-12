@@ -257,7 +257,7 @@ def user(uid: int):
     if signed_in() and uid == get_user_id():
         return redirect(url_for('profile'))
 
-    return "User " + str(uid)
+    return AccountController.view_for_profile(uid)
 
 
 
