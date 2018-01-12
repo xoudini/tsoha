@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <h1>Edit profile</h1>
+</div>
+
+{% if messages and messages['error'] %}
+<div class="alert alert-danger">
+    {{messages['error']}}
+</div>
+{% endif %}
+
+{% if session['signed_in'] %}
+
+<form action="/profile/edit" method="POST">
+    <div class="form-group">
+        <label>Display name</label>
+        <input class="form-control" type="text" name="display_name" value="{% if messages and messages['display_name'] %}{{messages['display_name']}}{% elif account.display_name %}{{account.display_name}}{% endif %}">
+    </div>
+
+    <button class="btn btn-success" type="submit" value="Update profile">Update</button>
+    <a class="btn btn-danger" href="/profile" value="Cancel">Cancel</a>
+</form>
+
+{% else %}
+
+<div class="alert alert-danger">
+    Not signed in.
+</div>
+
+{% endif %}
+
+{% endblock %}

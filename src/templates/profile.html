@@ -16,97 +16,71 @@
 </div>
 {% endif %}
 
-{% if messages and messages['error'] %}
-<div class="alert alert-danger">
-    {{messages['error']}}
-</div>
+
+{% if session['signed_in'] and account.uid == session['user_id'] %}
+<form action="/signout" method="POST">
 {% endif %}
 
-{% if session['signed_in'] %}
-
-    {% if edit %}
-
-    <form action="/profile/edit" method="POST">
-        <div class="form-group">
-            <label>Display name</label>
-            <input class="form-control" type="text" name="display_name" value="{% if messages and messages['display_name'] %}{{messages['display_name']}}{% elif account.display_name %}{{account.display_name}}{% endif %}">
-        </div>
-
-        <button class="btn btn-success" type="submit" value="Update profile">Update</button>
-        <a class="btn btn-danger" href="/profile" value="Cancel">Cancel</a>
-    </form>
-
+<div class="form-group">
+    <label>Username</label>
+    <p>{{account.username}}</p>
+    
+    <label>Display name</label>
+    {% if account.display_name %}
+    <p>{{account.display_name}}</p>
     {% else %}
-
-    <form action="/signout" method="POST">
-        <div class="form-group">
-            <label>Username</label>
-            <p>{{account.username}}</p>
-
-            <label>Display name</label>
-            {% if account.display_name %}
-            <p>{{account.display_name}}</p>
-            {% else %}
-            <p><i>No display name set.</i></p>
-            {% endif %}
-        </div>
-
-        <a class="btn btn-primary" href="/profile/edit">Edit</a>
-        <button class="btn btn-danger" type="submit">Sign out</button>
-    </form>
-
-    <br/>
-    <br/>
-
-    <h2>Recent posts</h2>
-
-        {% if account.threads %}
-
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Tags</th>
-                    <th>Posted</th>
-                    <th>Responses</th>
-                    <th>Last active</th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                {% for thread in account.threads %}
-                <tr>
-                    <td><a href="/threads/{{thread.uid}}">{{thread.title}}</a></td>
-                    <td>
-                        {% if thread.tags %}
-                            {% for tag in thread.tags %}
-                            <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
-                            {% endfor %}
-                        {% else %}
-                            <i>None</i>
-                        {% endif %}
-                    </td>
-                    <td>{{thread.created}} UTC</td>
-                    <td>{{thread.response_count}}</td>
-                    <td>{{thread.last_active}} UTC</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        {% else %}
-
-        <p><i>No posts.</i></p>
-
-        {% endif %}
-        
+    <p><i>No display name set.</i></p>
     {% endif %}
+</div>
+
+{% if session['signed_in'] and account.uid == session['user_id'] %}
+    <a class="btn btn-primary" href="/profile/edit">Edit</a>
+    <button class="btn btn-danger" type="submit">Sign out</button>
+</form>
+{% endif %}
+
+<br/>
+<br/>
+
+<h2>Recent posts</h2>
+
+{% if account.threads %}
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Tags</th>
+            <th>Posted</th>
+            <th>Responses</th>
+            <th>Last active</th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        {% for thread in account.threads %}
+        <tr>
+            <td><a href="/threads/{{thread.uid}}">{{thread.title}}</a></td>
+            <td>
+                {% if thread.tags %}
+                    {% for tag in thread.tags %}
+                    <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
+                    {% endfor %}
+                {% else %}
+                    <i>None</i>
+                {% endif %}
+            </td>
+            <td>{{thread.created}} UTC</td>
+            <td>{{thread.response_count}}</td>
+            <td>{{thread.last_active}} UTC</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% else %}
 
-<div class="alert alert-danger">
-    Not signed in.
-</div>
+<p><i>No posts.</i></p>
 
 {% endif %}
 
