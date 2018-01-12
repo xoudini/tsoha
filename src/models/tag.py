@@ -2,6 +2,7 @@ from src.models.base import BaseModel
 from src.shared import db
 
 from typing import List
+from string import ascii_letters
 
 class Tag(BaseModel):
 
@@ -15,8 +16,17 @@ class Tag(BaseModel):
             return self.uid == other.uid
         return False
     
-    def valid(self) -> bool:
-        return self.title
+    def validate(self) -> str:
+        if not self.title:
+            return "Title can't be empty."
+        
+        if not (1 <= len(self.title) <= 16):
+            return "Title must be between 1 and 16 characters."
+
+        if any(character not in ascii_letters for character in self.title):
+            return "Title must contain only alphabetic characters."
+
+        return None
     
     @staticmethod
     def all() -> List['Tag']:
@@ -100,11 +110,13 @@ class Tag(BaseModel):
             return None
     
     def create(self):
-        if not self.valid():
-            return {'error': "Invalid tag.", 'title': self.title}
+        validation_result = self.validate()
+
+        if validation_result is not None:
+            return {'error': validation_result, 'title': self.title}
 
         if Tag.find_by_title(self.title) is not None:
-            return {'error': "Tag with that title already exists.", 'title': self.title}
+            return {'error': "A tag with that title already exists.", 'title': self.title}
 
         db.execute_update(
             """
@@ -114,11 +126,18 @@ class Tag(BaseModel):
         )
     
     def update(self):
-        if not self.valid():
-            return {'error': "Invalid tag.", 'title': self.title}
+        validation_result = self.validate()
 
-        if Tag.find_by_title(self.title) is not None:
-            return {'error': "Tag with that title already exists.", 'title': self.title}
+        if validation_result is not None:
+            return {'error': validation_result, 'title': self.title}
+
+        tag_with_same_title = Tag.find_by_title(self.title)
+
+        if tag_with_same_title is not None:
+            if tag_with_same_title.uid == self.uid:
+                return {'warning': "The title is unchanged.", 'title': self.title}
+            else:
+                return {'error': "A tag with that title already exists.", 'title': self.title}
 
         if Tag.find_by_id(self.uid) is None:
             return {'error': "Tag doesn't exist.", 'title': self.title}

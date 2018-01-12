@@ -18,12 +18,18 @@
     </div>
     {% endif %}
 
+    {% if messages['warning'] %}
+    <div class="alert alert-warning">
+        {{messages['warning']}}
+    </div>
+    {% endif %}
+
     {% if tag %}
 
     <form action="/tags/{{tag.uid}}/edit" method="POST">
         <div class="form-group">
             <label>Title</label>
-            <input class="form-control" type="text" name="title" value="{{tag.title}}">
+            <input class="form-control" type="text" name="title" value="{% if messages and messages['title'] %}{{messages['title']}}{% else %}{{tag.title}}{% endif %}">
         </div>
 
         <button class="btn btn-primary" type="submit">Update</button>
