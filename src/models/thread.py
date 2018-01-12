@@ -74,6 +74,34 @@ class Thread(BaseModel):
             return None
     
     @staticmethod
+    def find_by_author_id(author_id: int) -> List['Thread']:
+        rows = db.execute_query(
+            """
+            SELECT
+                Thread.id, Thread.title, Thread.created,
+                COUNT(Response.id) as response_count,
+                MAX(Response.created) as last_active
+            FROM Thread
+            INNER JOIN Account ON Account.id = Thread.author_id
+            AND Thread.author_id = %(author_id)s
+            LEFT JOIN Response ON Response.thread_id = Thread.id
+            GROUP BY Thread.id
+            ORDER BY created DESC
+            LIMIT 5;
+            """,
+            {'author_id': author_id}
+        )
+
+        result = []
+
+        for row in rows:
+            tags = Tag.find_by_thread_id(row['id'])
+            thread = Thread(row['id'], None, tags, row['title'], row['created'], row['last_active'], row['response_count'])
+            result.append(thread)
+        
+        return result
+    
+    @staticmethod
     def author_for_thread(uid: int) -> int:
         rows = db.execute_query(
             """
