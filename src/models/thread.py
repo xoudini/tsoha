@@ -119,16 +119,16 @@ class Thread(BaseModel):
 
     @staticmethod
     def create(author_id: int, title: str, content: str, tag_ids: List[int]):
-        if not title:
-            return {'error': "Title can't be empty."}
-
-        if not content:
-            return {'error': "Content can't be empty."}
-
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
-            return {'error': "Invalid formatting."}
+            return {'error': "Invalid formatting on tags.", 'title': title, 'content': content, 'tag_ids': tag_ids}
+
+        if not title:
+            return {'error': "Title can't be empty.", 'content': content, 'tag_ids': tag_ids}
+
+        if not content:
+            return {'error': "Content can't be empty.", 'title': title, 'tag_ids': tag_ids}
 
         result = db.execute_update(
             """
@@ -139,10 +139,8 @@ class Thread(BaseModel):
             {'author_id': author_id, 'title': title}
         )
 
-        print("Result of insert:", result)
-
         if not ('id' in result and 'created' in result):
-            return {'error': "Something went wrong."}
+            return {'error': "Something went wrong.", 'title': title, 'content': content, 'tag_ids': tag_ids}
 
         thread_id = result['id']
         created = result['created']
@@ -162,13 +160,13 @@ class Thread(BaseModel):
 
     @staticmethod
     def update(uid: int, title: str, tag_ids: List[int]):
-        if not title:
-            return {'error': "Title can't be empty."}
-
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
-            return {'error': "Invalid formatting."}
+            return {'error': "Invalid formatting on tags.", 'title': title, 'tag_ids': tag_ids}
+
+        if not title:
+            return {'error': "Title can't be empty.", 'tag_ids': tag_ids}
 
         db.execute_update(
             """

@@ -28,10 +28,18 @@
             <label>Tags</label>
             <select class="form-control" name="tags" multiple="">
                 {% for tag in tags %}
-                    {% if tag in thread.tags %}
-                    <option value="{{tag.uid}}" selected>{{tag.title}}</option>
+                    {% if messages['tag_ids'] %}
+                        {% if tag.uid in messages['tag_ids'] %}
+                        <option value="{{tag.uid}}" selected>{{tag.title}}</option>
+                        {% else %}
+                        <option value="{{tag.uid}}">{{tag.title}}</option>
+                        {% endif %}
                     {% else %}
-                    <option value="{{tag.uid}}">{{tag.title}}</option>
+                        {% if tag in thread.tags %}
+                        <option value="{{tag.uid}}" selected>{{tag.title}}</option>
+                        {% else %}
+                        <option value="{{tag.uid}}">{{tag.title}}</option>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </select>

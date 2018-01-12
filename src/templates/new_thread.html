@@ -31,7 +31,11 @@
             <label>Tags</label>
             <select class="form-control" name="tags" multiple="">
                 {% for tag in tags %}
-                <option value="{{tag.uid}}">{{tag.title}}</option>
+                    {% if tag.uid in messages['tag_ids'] %}
+                    <option value="{{tag.uid}}" selected>{{tag.title}}</option>
+                    {% else %}
+                    <option value="{{tag.uid}}">{{tag.title}}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
 
