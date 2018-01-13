@@ -10,10 +10,12 @@
     <h1>Sign in</h1>
 </div>
 
-{% if messages['error'] %}
-<div class="alert alert-danger">
-    {{messages['error']}}
-</div>
+{% if messages['errors'] %}
+    {% for error in messages['errors'] %}
+    <div class="alert alert-danger">
+        {{error}}
+    </div>
+    {% endfor %}
 {% endif %}
 
 <form action="/signin" method="POST">

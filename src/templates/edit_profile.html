@@ -10,10 +10,12 @@
     <h1>Edit profile</h1>
 </div>
 
-{% if messages and messages['error'] %}
-<div class="alert alert-danger">
-    {{messages['error']}}
-</div>
+{% if messages and messages['errors'] %}
+    {% for error in messages['errors'] %}
+    <div class="alert alert-danger">
+        {{error}}
+    </div>
+    {% endfor %}
 {% endif %}
 
 {% if session['signed_in'] %}

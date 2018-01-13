@@ -15,14 +15,19 @@ class Account(BaseModel):
 
     @staticmethod
     def authenticate(username: str, password: str):
-        if not (username and password):
-            return {'error': "Neither field can be empty.", 'username': username}
+        errors = []
+
+        if not password:
+            errors.append("Password can't be empty.")
 
         if not (1 <= len(username) <= 16):
-            return {'error': "Username must be between 1 and 16 characters.", 'username': username}
+            errors.append("Username must be between 1 and 16 characters.")
 
         if any(character not in ascii_letters for character in username):
-            return {'error': "Username must contain only alphabetic characters.", 'username': username}
+            errors.append("Username must contain only alphabetic characters.")
+        
+        if errors:
+            return {'errors': errors, 'username': username}
 
         rows = db.execute_query(
             """
@@ -41,7 +46,7 @@ class Account(BaseModel):
         except:
             pass
         
-        return {'error': "Incorrect username or password.", 'username': username}
+        return {'errors': ["Incorrect username or password."], 'username': username}
 
     @staticmethod
     def find_by_id(uid: int) -> 'Account':
@@ -66,11 +71,19 @@ class Account(BaseModel):
             return None
     
     def update(self):
+        errors = []
+
         if Account.find_by_id(self.uid) is None:
-            return {'error': "Account doesn't exist.", 'display_name': self.display_name}
+            errors.append("Account doesn't exist.")
+
+        # Remove whitespace.
+        self.display_name = self.display_name.strip()
 
         if not (len(self.display_name) <= 50):
-            return {'error': "Display name must be shorter than 50 characters.", 'display_name': self.display_name}
+            errors.append("Display name must be shorter than 50 characters.")
+
+        if errors:
+            return {'errors': errors, 'display_name': self.display_name}
 
         db.execute_update(
             """
