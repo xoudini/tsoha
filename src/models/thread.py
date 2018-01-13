@@ -149,7 +149,7 @@ class Thread(BaseModel):
         )
 
         if not ('id' in result and 'created' in result):
-            return {'error': "Something went wrong.", 'title': title, 'content': content, 'tag_ids': tag_ids}
+            return {'errors': ["Something went wrong."], 'title': title, 'content': content, 'tag_ids': tag_ids}
 
         thread_id = result['id']
         created = result['created']
