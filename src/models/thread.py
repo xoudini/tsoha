@@ -7,6 +7,7 @@ from src.models.tag import Tag
 from src.models.response import Response
 
 from typing import List
+from string import ascii_letters, digits
 import datetime
 
 class Thread(BaseModel):
@@ -119,16 +120,24 @@ class Thread(BaseModel):
 
     @staticmethod
     def create(author_id: int, title: str, content: str, tag_ids: List[int]):
+        errors = []
+
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
-            return {'error': "Invalid formatting on tags.", 'title': title, 'content': content, 'tag_ids': tag_ids}
+            errors.append("Invalid formatting on tags.")
+        
+        if title and title[0] not in ascii_letters + digits:
+            errors.append("Title must begin with an alphanumeric character.")
 
-        if not title:
-            return {'error': "Title can't be empty.", 'content': content, 'tag_ids': tag_ids}
+        if not (10 <= len(title) <= 80):
+            errors.append("Title must be between 10 and 80 characters.")
 
-        if not content:
-            return {'error': "Content can't be empty.", 'title': title, 'tag_ids': tag_ids}
+        if not (10 <= len(content)):
+            errors.append("Content can't be less than 10 characters.")
+
+        if errors:
+            return {'errors': errors, 'title': title, 'content': content, 'tag_ids': tag_ids}
 
         result = db.execute_update(
             """
@@ -160,13 +169,21 @@ class Thread(BaseModel):
 
     @staticmethod
     def update(uid: int, title: str, tag_ids: List[int]):
+        errors = []
+
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
-            return {'error': "Invalid formatting on tags.", 'title': title, 'tag_ids': tag_ids}
+            errors.append("Invalid formatting on tags.")
+        
+        if title and title[0] not in ascii_letters + digits:
+            errors.append("Title must begin with an alphanumeric character.")
 
-        if not title:
-            return {'error': "Title can't be empty.", 'tag_ids': tag_ids}
+        if not (10 <= len(title) <= 80):
+            errors.append("Title must be between 10 and 80 characters.")
+        
+        if errors:
+            return {'errors': errors, 'title': title, 'tag_ids': tag_ids}
 
         db.execute_update(
             """
