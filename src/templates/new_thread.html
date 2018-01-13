@@ -28,9 +28,10 @@
             <label>Content</label>
             <textarea class="form-control" rows="6" name="content">{{messages['content']}}</textarea>
 
+            <label>Tags</label>
+
             {% if tags %}
             
-            <label>Tags</label>
             <select class="form-control" name="tags" multiple="">
                 {% for tag in tags %}
                     {% if tag.uid in messages['tag_ids'] %}
@@ -43,11 +44,16 @@
 
             {% else %}
 
-            {% if session['admin'] %}
-            <a class="btn btn-primary" href="/tags/new">Create new tag</a>
-            {% else %}
-            <i>No tags found.</i>
-            {% endif %}
+            <div>
+                <i>No tags found.</i>
+                
+                <br/>
+
+                {% if session['admin'] %}
+                <a class="btn btn-primary btn-sm" href="/tags/new">Create new tag</a>
+                {% endif %}
+            </div>
+                
 
             {%endif%}
         </div>
