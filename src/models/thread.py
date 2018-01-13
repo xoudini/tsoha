@@ -126,6 +126,10 @@ class Thread(BaseModel):
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
             errors.append("Invalid formatting on tags.")
+
+        # Remove whitespace.
+        title = title.strip()
+        content = content.strip()
         
         if title and title[0] not in ascii_letters + digits:
             errors.append("Title must begin with an alphanumeric character.")
@@ -175,6 +179,9 @@ class Thread(BaseModel):
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
             errors.append("Invalid formatting on tags.")
+
+        # Remove whitespace.
+        title = title.strip()
         
         if title and title[0] not in ascii_letters + digits:
             errors.append("Title must begin with an alphanumeric character.")
