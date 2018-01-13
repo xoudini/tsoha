@@ -16,17 +16,19 @@ class Tag(BaseModel):
             return self.uid == other.uid
         return False
     
-    def validate(self) -> str:
-        if not self.title:
-            return "Title can't be empty."
+    def validate(self) -> List[str]:
+        result = []
+
+        # Remove whitespace.
+        self.title = self.title.strip()
         
         if not (1 <= len(self.title) <= 16):
-            return "Title must be between 1 and 16 characters."
+            result.append("Title must be between 1 and 16 characters.")
 
         if any(character not in ascii_letters for character in self.title):
-            return "Title must contain only alphabetic characters."
+            result.append("Title must contain only alphabetic characters.")
 
-        return None
+        return result
     
     @staticmethod
     def all() -> List['Tag']:
@@ -110,13 +112,13 @@ class Tag(BaseModel):
             return None
     
     def create(self):
-        validation_result = self.validate()
+        errors = self.validate()
 
-        if validation_result is not None:
-            return {'error': validation_result, 'title': self.title}
+        if errors:
+            return {'errors': errors, 'title': self.title}
 
         if Tag.find_by_title(self.title) is not None:
-            return {'error': "A tag with that title already exists.", 'title': self.title}
+            return {'errors': ["A tag with that title already exists."], 'title': self.title}
 
         db.execute_update(
             """
@@ -126,21 +128,21 @@ class Tag(BaseModel):
         )
     
     def update(self):
-        validation_result = self.validate()
+        errors = self.validate()
 
-        if validation_result is not None:
-            return {'error': validation_result, 'title': self.title}
+        if errors:
+            return {'errors': errors, 'title': self.title}
 
         tag_with_same_title = Tag.find_by_title(self.title)
 
         if tag_with_same_title is not None:
             if tag_with_same_title.uid == self.uid:
-                return {'warning': "The title is unchanged.", 'title': self.title}
+                return {'warnings': ["The title is unchanged."], 'title': self.title}
             else:
-                return {'error': "A tag with that title already exists.", 'title': self.title}
+                return {'errors': ["A tag with that title already exists."], 'title': self.title}
 
         if Tag.find_by_id(self.uid) is None:
-            return {'error': "Tag doesn't exist.", 'title': self.title}
+            return {'errors': ["Tag doesn't exist."], 'title': self.title}
 
         db.execute_update(
             """

@@ -12,16 +12,20 @@
 
 {% if session['admin'] %}
 
-    {% if messages['error'] %}
-    <div class="alert alert-danger">
-        {{messages['error']}}
-    </div>
+    {% if messages['errors'] %}
+        {% for error in messages['errors'] %}
+        <div class="alert alert-danger">
+            {{error}}
+        </div>
+        {% endfor %}
     {% endif %}
 
-    {% if messages['warning'] %}
-    <div class="alert alert-warning">
-        {{messages['warning']}}
-    </div>
+    {% if messages['warnings'] %}
+        {% for warning in messages['warnings'] %}
+        <div class="alert alert-warning">
+            {{warning}}
+        </div>
+        {% endfor %}
     {% endif %}
 
     {% if tag %}
