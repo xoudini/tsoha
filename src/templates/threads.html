@@ -15,6 +15,8 @@
 <div class="control-group">&nbsp;</div>
 {% endif %}
 
+{% if threads %}
+
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
@@ -48,5 +50,13 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% else %}
+
+<div>
+    <h2>No threads found.</h2>
+</div>
+
+{% endif %}
 
 {% endblock %}
