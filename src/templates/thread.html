@@ -11,7 +11,7 @@
     <div class="page-header">
         <h1>{{thread.title}}</h1>
         <div>
-            <a href="/user/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a> · <time>{{thread.created}} UTC</time>
+            <a href="/users/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a> · <time>{{thread.created}} UTC</time>
         </div>
         <br/>
         <div>
@@ -38,7 +38,7 @@
             {% for response in thread.responses %}
             <tr>
                 <td style="width: 20%;">
-                    <a href="/user/{{response.author.uid}}">{% if response.author.display_name %}{{response.author.display_name}}{% else %}{{response.author.username}}{% endif %}</a>
+                    <a href="/users/{{response.author.uid}}">{% if response.author.display_name %}{{response.author.display_name}}{% else %}{{response.author.username}}{% endif %}</a>
                     <br/>
                     <p><time datetime="{{response.created}}">{{response.created}} UTC</time></p>
                 </td>

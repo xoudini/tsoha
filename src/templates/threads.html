@@ -40,7 +40,7 @@
                     <i>None</i>
                 {% endif %}
             </td>
-            <td><a href="/user/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a></td>
+            <td><a href="/users/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a></td>
             <td>{{thread.created}} UTC</td>
             <td>{{thread.response_count}}</td>
             <td>{{thread.last_active}} UTC</td>

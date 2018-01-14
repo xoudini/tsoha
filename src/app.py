@@ -290,7 +290,7 @@ def udpate_profile():
         else:
             return AccountController.view_for_edit_profile(get_user_id(), result)
 
-@app.route("/user/<int:uid>")
+@app.route("/users/<int:uid>")
 def user(uid: int):
     if signed_in() and uid == get_user_id():
         return redirect(url_for('profile'))
