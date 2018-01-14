@@ -5,7 +5,6 @@ import src.shared as shared
 shared.setup()
 
 # Controllers.
-from src.controllers.hello import HelloWorldController # TODO: remove
 from src.controllers.account import AccountController
 from src.controllers.tag import TagController
 from src.controllers.thread import ThreadController
@@ -278,6 +277,8 @@ def user(uid: int):
     return AccountController.view_for_profile(uid)
 
 
+
+### Entry point.
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0')

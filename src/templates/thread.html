@@ -20,7 +20,7 @@
                 <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
                 {% endfor %}
             {% else %}
-                <i>No tags.</i>
+                <p><i>No tags.</i></p>
             {% endif %}
         </div>
     </div>
@@ -40,7 +40,7 @@
                 <td style="width: 20%;">
                     <a href="/user/{{response.author.uid}}">{% if response.author.display_name %}{{response.author.display_name}}{% else %}{{response.author.username}}{% endif %}</a>
                     <br/>
-                    <p>Posted at <time datetime="{{response.created}}">{{response.created}} UTC</time></p>
+                    <p><time datetime="{{response.created}}">{{response.created}} UTC</time></p>
                 </td>
                 <td>
                     <p>{{response.content}}</p>
@@ -64,7 +64,7 @@
     <form action="/threads/{{thread.uid}}" method="POST">
         <label>Respond to thread</label>
         <textarea class="form-control" rows="6" name="content">{{messages['content']}}</textarea>
-
+        <br/>
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     {% else %}
@@ -73,7 +73,6 @@
         You must be signed in to create responses.
     </div>
     {% endif %}
-
 
 {% else %}
 

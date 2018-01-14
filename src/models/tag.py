@@ -163,8 +163,3 @@ class Tag(BaseModel):
             """,
             {'id': self.uid}
         )
-
-
-
-    def __repr__(self):
-        return "Tag - id: " + str(self.uid) + ", title: " + self.title
