@@ -28,12 +28,16 @@ def get_username() -> str:
     if 'username' in session:
         return session['username']
 
-def get_display_name() -> str:
-    if 'display_name' in session:
-        return session['display_name']
-
 def admin_session() -> bool:
     return session['admin'] if 'admin' in session else False
+
+def set_signed_in(user_id: int, username: str, display_name: str = None, admin: bool = False):
+    session['signed_in'] = True
+    session['fresh_signin'] = True
+    session['user_id'] = user_id
+    session['username'] = username
+    session['display_name'] = display_name
+    session['admin'] = admin
 
 
 ### Testing database connection ###
@@ -204,6 +208,28 @@ def new_tag():
 
 ### Account endpoints ###
 
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    # Redirect if already signed in.
+    if signed_in():
+        return redirect(url_for('profile'))
+
+    if request.method == 'GET':
+        return AccountController.view_for_signup()
+    else:
+        username = request.form['username']
+        password = request.form['password']
+        repeated_password = request.form['repeated_password']
+        result = AccountController.signup(username, password, repeated_password)
+
+        if 'user' in result:
+            # TODO: Make account serializable.
+            account = result['user']
+            set_signed_in(account.uid, account.username)
+            return redirect(url_for('profile'))
+        else:
+            return AccountController.view_for_signup(result)
+
 @app.route("/signin", methods=['GET', 'POST'])
 def signin():
     # Redirect if already signed in.
@@ -219,12 +245,7 @@ def signin():
         if 'user' in result:
             # TODO: Make account serializable.
             account = result['user']
-            session['signed_in'] = True
-            session['user_id'] = account.uid
-            session['username'] = account.username
-            session['display_name'] = account.display_name
-            session['admin'] = account.admin
-            session['fresh_signin'] = True
+            set_signed_in(account.uid, account.username, account.display_name, account.admin)
             return redirect(url_for('profile'))
         else:
             return AccountController.view_for_signin(result)
@@ -247,9 +268,9 @@ def profile():
         return redirect(url_for('signin'))
 
     if 'fresh_signin' in session:
-        name = get_display_name() if get_display_name() else get_username()
+        name = session['display_name'] if 'display_name' in session and session['display_name'] else get_username()
         session.pop('fresh_signin')
-        return AccountController.view_for_profile(get_user_id(), {'welcome': "Welcome back " + name + "!"})
+        return AccountController.view_for_profile(get_user_id(), {'welcome': "Welcome " + name + "!"})
     
     return AccountController.view_for_profile(get_user_id())
 
