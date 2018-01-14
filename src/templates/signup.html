@@ -7,7 +7,7 @@
 {% block body %}
 
 <div class="page-header">
-    <h1>Sign in</h1>
+    <h1>Sign up</h1>
 </div>
 
 {% if messages['errors'] %}
@@ -18,14 +18,10 @@
     {% endfor %}
 {% endif %}
 
-<form action="/signin" method="POST">
+<form action="/signup" method="POST">
     <div class="form-group">
         <label>Username</label>
-        {% if session['username'] and not messages['username'] %}
-        <input class="form-control" type="text" name="username" value="{{session['username']}}">
-        {% else %}
         <input class="form-control" type="text" name="username" value="{{messages['username']}}">
-        {% endif %}
     </div>
 
     <div class="form-group">
@@ -33,13 +29,12 @@
         <input class="form-control" type="password" name="password">
     </div>
 
-    <button class="btn btn-primary" type="submit">Sign in</button>
+    <div class="form-group">
+        <label>Repeat password</label>
+        <input class="form-control" type="password" name="repeated_password">
+    </div>
+
+    <button class="btn btn-primary" type="submit">Sign up</button>
 </form>
-
-<br/>
-
-<div class="alert alert-info">
-    No account? <a href="/signup"><b>Sign up here</b></a>.
-</div>
 
 {% endblock %}
