@@ -2,6 +2,7 @@ import psycopg2 as pg
 from psycopg2.extras import RealDictCursor, RealDictRow
 
 from typing import List, Dict, Tuple
+import datetime
 
 class DatabaseManager:
 
@@ -70,6 +71,20 @@ class DatabaseManager:
                     except Exception as e:
                         # TODO: Rethrow.
                         print(e)
+
+        except Exception as e:
+            # TODO: Rethrow.
+            print(e)
+    
+    def get_timestamp(self) -> datetime:
+        try:
+            with pg.connect(dsn=self.dsn) as connection:
+                with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+                    cursor.execute("SELECT NOW() AT TIME ZONE 'UTC' AS timestamp;")
+                    result = cursor.fetchone()
+
+                    if 'timestamp' in result:
+                        return result['timestamp']
 
         except Exception as e:
             # TODO: Rethrow.
