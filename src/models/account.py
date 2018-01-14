@@ -12,42 +12,7 @@ class Account(BaseModel):
         self.display_name = display_name
         self.admin = admin
         self.threads = threads
-
-    @staticmethod
-    def authenticate(username: str, password: str):
-        errors = []
-
-        if not password:
-            errors.append("Password can't be empty.")
-
-        if not (1 <= len(username) <= 16):
-            errors.append("Username must be between 1 and 16 characters.")
-
-        if any(character not in ascii_letters for character in username):
-            errors.append("Username must contain only alphabetic characters.")
-        
-        if errors:
-            return {'errors': errors, 'username': username}
-
-        rows = db.execute_query(
-            """
-            SELECT * FROM Account WHERE username = %(username)s;
-            """,
-            {'username': username.lower()}
-        )
-
-        try:
-            row = rows.pop(0)
-            stored_hash = row['password']
-            if pw.matches(password, stored_hash):
-                account = Account(row['id'], row['username'], row['display_name'], row['admin'])
-                return {'user': account}
-        
-        except:
-            pass
-        
-        return {'errors': ["Incorrect username or password."], 'username': username}
-
+    
     @staticmethod
     def find_by_id(uid: int) -> 'Account':
         rows = db.execute_query(
@@ -69,6 +34,102 @@ class Account(BaseModel):
 
         except:
             return None
+    
+    @staticmethod
+    def username_exists(username: str) -> bool:
+        rows = db.execute_query(
+            """
+            SELECT id FROM Account WHERE username = %(username)s;
+            """,
+            {'username': username}
+        )
+
+        try:
+            row = rows.pop(0)
+            return 'id' in row
+
+        except:
+            return False
+    
+    @staticmethod
+    def validate(username: str, password: str) -> List[str]:
+        result = []
+
+        if not password:
+            result.append("Password can't be empty.")
+
+        if not (1 <= len(username) <= 16):
+            result.append("Username must be between 1 and 16 characters.")
+
+        if any(character not in ascii_letters for character in username):
+            result.append("Username must contain only alphabetic characters.")
+        
+        return result
+
+    @staticmethod
+    def authenticate(username: str, password: str):
+        # Remove whitespace and lowercase.
+        username = username.strip().lower()
+
+        errors = Account.validate(username, password)
+        
+        if errors:
+            return {'errors': errors, 'username': username}
+
+        rows = db.execute_query(
+            """
+            SELECT * FROM Account WHERE username = %(username)s;
+            """,
+            {'username': username}
+        )
+
+        try:
+            row = rows.pop(0)
+            stored_hash = row['password']
+
+            if pw.matches(password, stored_hash):
+                account = Account(row['id'], row['username'], row['display_name'], row['admin'])
+                return {'user': account}
+        
+        except:
+            pass
+        
+        return {'errors': ["Incorrect username or password."], 'username': username}
+    
+    @staticmethod
+    def create(username: str, password: str, repeated_password: str):
+        # Remove whitespace and lowercase.
+        username = username.strip().lower()
+
+        errors = Account.validate(username, password)
+
+        if Account.username_exists(username):
+            errors.append("That username is already taken.")
+        
+        if password != repeated_password:
+            errors.append("Password entries don't match.")
+        
+        if errors:
+            return {'errors': errors, 'username': username}
+
+        hashed_bytes = pw.generate_hash(password)
+        password_hash = pw.decode_string(hashed_bytes)
+
+        result = db.execute_update(
+            """
+            INSERT INTO Account (username, password, admin)
+            VALUES (%(username)s, %(password_hash)s, FALSE)
+            RETURNING id;
+            """,
+            {'username': username, 'password_hash': password_hash}
+        )
+
+        if 'id' not in result:
+            return {'errors': ["Something went wrong."], 'username': username}
+        
+        account = Account(result['id'], username)
+
+        return {'user': account}
     
     def update(self):
         errors = []
