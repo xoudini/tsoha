@@ -25,9 +25,10 @@
             <label>Title</label>
             <input class="form-control" type="text" name="title" value="{% if messages['title'] %}{{messages['title']}}{% else %}{{thread.title}}{% endif %}">
 
+            <label>Tags</label>
+
             {% if tags %}
             
-            <label>Tags</label>
             <select class="form-control" name="tags" multiple="">
                 {% for tag in tags %}
                     {% if messages['tag_ids'] %}
@@ -48,11 +49,15 @@
 
             {% else %}
 
-            {% if session['admin'] %}
-            <a class="btn btn-primary" href="/tags/new">Create new tag</a>
-            {% else %}
-            <i>No tags found.</i>
-            {% endif %}
+            <div>
+                <i>No tags found.</i>
+                
+                <br/>
+
+                {% if session['admin'] %}
+                <a class="btn btn-primary btn-sm" href="/tags/new">Create new tag</a>
+                {% endif %}
+            </div>
 
             {%endif%}
         </div>
