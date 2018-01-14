@@ -63,7 +63,7 @@ def thread(uid: int):
             abort(401)
         
         # Abort if no content was provided.
-        if not 'content' in request.form:
+        if 'content' not in request.form:
             abort(405)
         
         content = request.form['content']
