@@ -9,6 +9,7 @@ from src.controllers.hello import HelloWorldController # TODO: remove
 from src.controllers.account import AccountController
 from src.controllers.tag import TagController
 from src.controllers.thread import ThreadController
+from src.controllers.response import ResponseController
 
 # Application instance.
 app = Flask(__name__)
@@ -54,9 +55,26 @@ def index():
 def threads():
     return ThreadController.index()
 
-@app.route("/threads/<int:uid>")
+@app.route("/threads/<int:uid>", methods=['GET', 'POST'])
 def thread(uid: int):
-    return ThreadController.view_for_thread(uid)
+    if request.method == 'GET':
+        return ThreadController.view_for_thread(uid)
+    else:
+        if not signed_in():
+            abort(401)
+        
+        # Abort if no content was provided.
+        if not 'content' in request.form:
+            abort(405)
+        
+        content = request.form['content']
+
+        result = ResponseController.create(get_user_id(), uid, content)
+
+        if result is None:
+            return redirect(url_for('thread', uid=uid))
+        else:
+            return ThreadController.view_for_thread(uid, messages=result)
 
 @app.route("/threads/<int:uid>/edit", methods=['GET', 'POST']) # HACK: PUT method unavailable from jinja.
 def update_thread(uid: int):

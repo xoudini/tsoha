@@ -8,47 +8,72 @@
 
 {% if thread %}
 
-<div class="page-header">
-    <h1>{{thread.title}}</h1>
-    <div>
-        <a href="/user/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a> · <time>{{thread.created}} UTC</time>
+    <div class="page-header">
+        <h1>{{thread.title}}</h1>
+        <div>
+            <a href="/user/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a> · <time>{{thread.created}} UTC</time>
+        </div>
+        <br/>
+        <div>
+            {% if thread.tags %}
+                {% for tag in thread.tags %}
+                <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
+                {% endfor %}
+            {% else %}
+                <i>No tags.</i>
+            {% endif %}
+        </div>
     </div>
-    <br/>
-    <div>
-        {% if thread.tags %}
-            {% for tag in thread.tags %}
-            <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
+
+    {% if session['admin'] or session['user_id'] == thread.author.uid %}
+    <form action="/threads/{{thread.uid}}/delete" method="POST">
+        <a class="btn btn-primary" href="/threads/{{thread.uid}}/edit">Edit</a>
+        <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+    <div class="control-group">&nbsp;</div>
+    {% endif %}
+
+    <table class="table table-striped table-bordered">
+        <tbody>
+            {% for response in thread.responses %}
+            <tr>
+                <td style="width: 20%;">
+                    <a href="/user/{{response.author.uid}}">{% if response.author.display_name %}{{response.author.display_name}}{% else %}{{response.author.username}}{% endif %}</a>
+                    <br/>
+                    <p>Posted at <time datetime="{{response.created}}">{{response.created}} UTC</time></p>
+                </td>
+                <td>
+                    <p>{{response.content}}</p>
+                </td>
+            </tr>
             {% endfor %}
-        {% else %}
-            <i>No tags.</i>
-        {% endif %}
-    </div>
-</div>
+        </tbody>
+    </table>
 
-{% if session['admin'] or session['user_id'] == thread.author.uid %}
-<form action="/threads/{{thread.uid}}/delete" method="POST">
-    <a class="btn btn-primary" href="/threads/{{thread.uid}}/edit">Edit</a>
-    <button class="btn btn-danger" type="submit">Delete</button>
-</form>
-<div class="control-group">&nbsp;</div>
-{% endif %}
+    <br/>
 
-<table class="table table-striped table-bordered">
-    <tbody>
-        {% for response in thread.responses %}
-        <tr>
-            <td style="width: 20%;">
-                <a href="/user/{{response.author.uid}}">{% if response.author.display_name %}{{response.author.display_name}}{% else %}{{response.author.username}}{% endif %}</a>
-                <br/>
-                <p>Posted at <time datetime="{{response.created}}">{{response.created}} UTC</time></p>
-            </td>
-            <td>
-                <p>{{response.content}}</p>
-            </td>
-        </tr>
+    {% if messages['errors'] %}
+        {% for error in messages['errors'] %}
+        <div class="alert alert-danger">
+            {{error}}
+        </div>
         {% endfor %}
-    </tbody>
-</table>
+    {% endif %}
+
+    {% if session['signed_in'] %}
+    <form action="/threads/{{thread.uid}}" method="POST">
+        <label>Respond to thread</label>
+        <textarea class="form-control" rows="6" name="content">{{messages['content']}}</textarea>
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    {% else %}
+    <label>Respond to thread</label>
+    <div class="alert alert-info">
+        You must be signed in to create responses.
+    </div>
+    {% endif %}
+
 
 {% else %}
 

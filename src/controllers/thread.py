@@ -14,9 +14,9 @@ class ThreadController(BaseController):
         return render_template('threads.html', title="Threads", threads=threads)
 
     @staticmethod
-    def view_for_thread(uid: int):
+    def view_for_thread(uid: int, messages: Dict[str, str] = None):
         thread = Thread.find_by_id(uid)
-        return render_template('thread.html', title="Thread", thread=thread)
+        return render_template('thread.html', title="Thread", thread=thread, messages=messages)
 
     @staticmethod
     def view_for_new_thread(messages: Dict[str, str] = None):
