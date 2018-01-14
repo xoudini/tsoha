@@ -40,7 +40,21 @@ class Response(BaseModel):
         return result
     
     @staticmethod
-    def create(author_id: int, thread_id: int, content: str, created: datetime):
+    def create(author_id: int, thread_id: int, content: str, created: datetime = None):
+        errors = []
+
+        # Remove whitespace.
+        content = content.strip()
+
+        if not (10 <= len(content)):
+            errors.append("Content can't be less than 10 characters.")
+        
+        if errors:
+            return {'errors': errors, 'content': content}
+
+        if created is None:
+            created = db.get_timestamp()
+
         db.execute_update(
             """
             INSERT INTO Response (author_id, thread_id, content, created)
