@@ -184,6 +184,7 @@ class Thread:
                 {'tag_id': tag_id, 'thread_id': thread_id}
             )
         
+        # Success.
         return {'thread_id': thread_id}
 
     @staticmethod
@@ -233,6 +234,9 @@ class Thread:
                     """,
                     {'tag_id': existing_tag_id, 'thread_id': uid}
                 )
+        
+        # Success.
+        return {}
 
     @staticmethod
     def delete(uid: int):

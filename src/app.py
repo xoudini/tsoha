@@ -78,7 +78,7 @@ def thread(uid: int):
 
         result = ResponseController.create(get_user_id(), uid, content)
 
-        if result is None:
+        if 'errors' not in result:
             return redirect(url_for('thread', uid=uid))
         else:
             return ThreadController.view_for_thread(uid, messages=result)
@@ -106,7 +106,7 @@ def update_thread(uid: int):
         
         result = ThreadController.update(uid, title, tag_ids)
 
-        if result is None:
+        if 'errors' not in result:
             return redirect(url_for('thread', uid=uid))
         else:
             return ThreadController.view_for_edit_thread(uid, result)
@@ -146,7 +146,7 @@ def new_thread():
 
         result = ThreadController.create(get_user_id(), title, content, tag_ids)
         
-        if 'thread_id' in result:
+        if 'errors' not in result:
             return redirect(url_for('thread', uid=result['thread_id']))
         else:
             return ThreadController.view_for_new_thread(result)
@@ -174,7 +174,7 @@ def update_tag(uid: int):
         title = request.form['title']
         result = TagController.update(uid, title)
 
-        if result is None:
+        if not any(key in result for key in ('errors', 'warnings')):
             return redirect(url_for('tags'))
         else:
             return TagController.view_for_edit_tag(uid, result)
@@ -187,10 +187,11 @@ def delete_tag(uid: int):
 
     result = TagController.delete(uid)
 
-    if result is None:
+    if 'errors' not in result:
         return redirect(url_for('tags'))
     else:
-        return TagController.view_for_edit_tag(uid, result)
+        # NOTE: Only reason for a delete failing is the non-existence of the tag.
+        abort(404)
 
 @app.route("/tags/new", methods=['GET', 'POST'])
 def new_tag():
@@ -204,7 +205,7 @@ def new_tag():
         title = request.form['title']
         result = TagController.create(title)
 
-        if result is None:
+        if 'errors' not in result:
             return redirect(url_for('tags'))
         else:
             return TagController.view_for_new_tag(result)
@@ -274,7 +275,7 @@ def profile():
     if 'fresh_signin' in session:
         name = session['display_name'] if 'display_name' in session and session['display_name'] else get_username()
         session.pop('fresh_signin')
-        return AccountController.view_for_profile(get_user_id(), {'welcome': "Welcome " + name + "!"})
+        return AccountController.view_for_profile(get_user_id(), {'welcome': "Welcome, " + name + "!"})
     
     return AccountController.view_for_profile(get_user_id())
 
@@ -289,7 +290,7 @@ def udpate_profile():
         display_name = request.form['display_name']
         result = AccountController.update(get_user_id(), display_name)
 
-        if result is None:
+        if 'errors' not in result:
             return redirect(url_for('profile'))
         else:
             return AccountController.view_for_edit_profile(get_user_id(), result)

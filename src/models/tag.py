@@ -131,6 +131,9 @@ class Tag:
             """,
             {'title': self.title}
         )
+
+        # Success.
+        return {}
     
     def update(self):
         errors = self.validate()
@@ -156,10 +159,13 @@ class Tag:
             """,
             {'id': self.uid, 'title': self.title}
         )
+
+        # Success.
+        return {}
     
     def delete(self):
         if Tag.find_by_id(self.uid) is None:
-            return {'error': "Tag doesn't exist."}
+            return {'errors': ["Tag doesn't exist."]}
 
         db.execute_update(
             """
@@ -168,3 +174,6 @@ class Tag:
             """,
             {'id': self.uid}
         )
+
+        # Success.
+        return {}

@@ -73,3 +73,6 @@ class Response:
             """,
             {'author_id': author_id, 'thread_id': thread_id, 'content': content, 'created': created}
         )
+
+        # Success.
+        return {}

@@ -93,6 +93,7 @@ class Account:
             stored_hash = row['password']
 
             if pw.matches(password, stored_hash):
+                # Successful authentication.
                 account = Account(row['id'], row['username'], row['display_name'], row['admin'])
                 return {'user': account}
         
@@ -134,6 +135,7 @@ class Account:
         
         account = Account(result['id'], username)
 
+        # Success.
         return {'user': account}
     
     def update(self):
@@ -158,3 +160,6 @@ class Account:
             """,
             {'id': self.uid, 'display_name': None if not self.display_name else self.display_name}
         )
+
+        # Success.
+        return {}
