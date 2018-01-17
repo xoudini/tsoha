@@ -1,4 +1,3 @@
-from src.models.base import BaseModel
 from src.shared import db
 
 # Required models
@@ -10,7 +9,7 @@ from typing import List
 from string import ascii_letters, digits
 import datetime
 
-class Thread(BaseModel):
+class Thread:
 
     def __init__(self, uid: int, author: Account, tags: List[Tag], title: str, created: datetime, last_active: datetime = None, response_count: int = None, responses: List[Response] = None):
         self.uid = uid

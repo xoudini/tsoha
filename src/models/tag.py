@@ -1,10 +1,9 @@
-from src.models.base import BaseModel
 from src.shared import db
 
 from typing import List
-from string import ascii_letters
+from string import ascii_letters, digits
 
-class Tag(BaseModel):
+class Tag:
 
     def __init__(self, uid: int, title: str, count: int = None):
         self.uid = uid
@@ -25,8 +24,8 @@ class Tag(BaseModel):
         if not (1 <= len(self.title) <= 16):
             result.append("Title must be between 1 and 16 characters.")
 
-        if any(character not in ascii_letters for character in self.title):
-            result.append("Title must contain only alphabetic characters.")
+        if any(character not in ascii_letters + digits for character in self.title):
+            result.append("Title must contain only alphanumeric characters.")
 
         return result
     

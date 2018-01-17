@@ -1,4 +1,3 @@
-from src.models.base import BaseModel
 from src.shared import db
 
 # Required models
@@ -7,7 +6,7 @@ from src.models.account import Account
 from typing import List
 import datetime
 
-class Response(BaseModel):
+class Response:
     
     def __init__(self, uid: int, author: Account, content: str, created: datetime):
         self.uid = uid

@@ -1,10 +1,9 @@
-from src.models.base import BaseModel
 from src.shared import db, pw
 
 from typing import List
-from string import ascii_letters
+from string import ascii_letters, digits
 
-class Account(BaseModel):
+class Account:
     
     def __init__(self, uid: int, username: str, display_name: str = None, admin: bool = False, threads: List = None):
         self.uid = uid
@@ -61,8 +60,8 @@ class Account(BaseModel):
         if not (1 <= len(username) <= 16):
             result.append("Username must be between 1 and 16 characters.")
 
-        if any(character not in ascii_letters for character in username):
-            result.append("Username must contain only alphabetic characters.")
+        if any(character not in ascii_letters + digits for character in username):
+            result.append("Username must contain only alphanumeric characters.")
         
         return result
 
