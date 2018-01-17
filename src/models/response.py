@@ -46,8 +46,8 @@ class Response(BaseModel):
         # Remove whitespace.
         content = content.strip()
 
-        if not (10 <= len(content)):
-            errors.append("Content can't be less than 10 characters.")
+        if not (10 <= len(content) <= 1000):
+            errors.append("Content must be between 10 and 1000 characters.")
         
         if errors:
             return {'errors': errors, 'content': content}

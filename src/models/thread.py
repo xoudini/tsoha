@@ -137,8 +137,8 @@ class Thread(BaseModel):
         if not (10 <= len(title) <= 80):
             errors.append("Title must be between 10 and 80 characters.")
 
-        if not (10 <= len(content)):
-            errors.append("Content can't be less than 10 characters.")
+        if not (10 <= len(content) <= 1000):
+            errors.append("Content must be between 10 and 1000 characters.")
 
         if errors:
             return {'errors': errors, 'title': title, 'content': content, 'tag_ids': tag_ids}
