@@ -1,10 +1,19 @@
-#main-container{
+#main-container {
   max-width: 1200px;
   padding: 10px 25px;
   margin: 0px auto;
+  word-wrap: break-word;
 }
 
-.navbar .container-fluid{
+.navbar .container-fluid {
   max-width: 1200px;
   margin: 0px auto;
+}
+
+table {
+  table-layout: fixed;
+}
+
+.btn {
+  margin-bottom: 4pt;
 }
