@@ -39,13 +39,13 @@
                     <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
                     {% endfor %}
                 {% else %}
-                    <i>None</i>
+                    <p><i>None</i></p>
                 {% endif %}
             </td>
             <td><a href="/users/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a></td>
-            <td>{{thread.created}} UTC</td>
-            <td>{{thread.response_count}}</td>
-            <td>{{thread.last_active}} UTC</td>
+            <td><time datetime="{{thread.created}}">{{thread.created}} UTC</time></td>
+            <td><p>{{thread.response_count}}</p></td>
+            <td><time datetime="{{thread.last_active}}">{{thread.last_active}} UTC</time></td>
         </tr>
         {% endfor %}
     </tbody>
