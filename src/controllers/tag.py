@@ -6,9 +6,11 @@ from src.models.tag import Tag
 
 class TagController:
     
+    ### View rendering.
+
     @staticmethod
-    def index():
-        tags = Tag.all()
+    def view_for_tags():
+        tags = Tag.find_all()
         return render_template('tags.html', title="Tags", tags=tags)
 
     @staticmethod
@@ -24,6 +26,9 @@ class TagController:
     def view_for_edit_tag(uid: int, messages: Dict[str, str] = None):
         tag = Tag.find_by_id(uid)
         return render_template('edit_tag.html', title="Edit tag", tag=tag, messages=messages)
+
+
+    ### Database updates.
 
     @staticmethod
     def create(title: str):

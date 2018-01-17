@@ -13,6 +13,9 @@ class Response:
         self.author = author
         self.content = content
         self.created = "{0:%Y/%m/%d %H:%M}".format(created)
+    
+
+    ### Helper methods.
 
     @staticmethod
     def validate(content: str):
@@ -22,6 +25,9 @@ class Response:
             result.append("Content must be between 10 and 1000 characters.")
 
         return result
+
+
+    ### CRUD actions.
 
     @staticmethod
     def find_by_thread_id(thread_id: int) -> List['Response']:

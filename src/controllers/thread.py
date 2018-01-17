@@ -6,10 +6,12 @@ from src.models.thread import Thread
 from src.models.tag import Tag
 
 class ThreadController:
+
+    ### View rendering.
     
     @staticmethod
-    def index():
-        threads = Thread.all()
+    def view_for_threads():
+        threads = Thread.find_all()
         return render_template('threads.html', title="Threads", threads=threads)
 
     @staticmethod
@@ -19,22 +21,17 @@ class ThreadController:
 
     @staticmethod
     def view_for_new_thread(messages: Dict[str, str] = None):
-        tags = Tag.all()
+        tags = Tag.find_all()
         return render_template('new_thread.html', title="New thread", tags=tags, messages=messages)
 
     @staticmethod
     def view_for_edit_thread(uid: int, messages: Dict[str, str] = None):
         thread = Thread.find_by_id(uid)
-        tags = Tag.all()
+        tags = Tag.find_all()
         return render_template('edit_thread.html', title="Edit thread", thread=thread, tags=tags, messages=messages)
 
-    @staticmethod
-    def thread_exists(uid: int):
-        return Thread.find_by_id(uid) is not None
 
-    @staticmethod
-    def author_for_thread(uid: int):
-        return Thread.author_for_thread(uid)
+    ### Database updates.
 
     @staticmethod
     def create(user_id: int, title: str, content: str, tag_ids: List[int]):
@@ -49,3 +46,14 @@ class ThreadController:
     @staticmethod
     def delete(uid: int):
         Thread.delete(uid)
+
+
+    ### Helper methods.
+
+    @staticmethod
+    def thread_exists(uid: int):
+        return Thread.find_by_id(uid) is not None
+
+    @staticmethod
+    def author_for_thread(uid: int):
+        return Thread.author_for_thread(uid)

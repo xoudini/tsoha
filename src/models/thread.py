@@ -21,8 +21,45 @@ class Thread:
         self.response_count = response_count - 1 if response_count else None # Thread starter shouldn't count as a response.
         self.responses = responses
     
+
+    ### Helper methods.
+    
     @staticmethod
-    def all() -> List['Thread']:
+    def validate(title: str, tag_ids: List[int]):
+        result = []
+
+        if title and title[0] not in ascii_letters + digits:
+            result.append("Title must begin with an alphanumeric character.")
+
+        if not (10 <= len(title) <= 80):
+            result.append("Title must be between 10 and 80 characters.")
+        
+        if len(tag_ids) > 5:
+            result.append("You can only select a maximum of 5 tags.")
+
+        return result
+    
+    @staticmethod
+    def author_for_thread(uid: int) -> int:
+        rows = db.execute_query(
+            """
+            SELECT author_id FROM Thread
+            WHERE id = %(id)s;
+            """,
+            {'id': uid}
+        )
+
+        try:
+            row = rows.pop(0)
+            return row['author_id']
+        except:
+            return None
+
+
+    ### CRUD actions.
+    
+    @staticmethod
+    def find_all() -> List['Thread']:
         rows = db.execute_query(
             """
             SELECT 
@@ -99,37 +136,6 @@ class Thread:
             thread = Thread(row['id'], None, tags, row['title'], row['created'], row['last_active'], row['response_count'])
             result.append(thread)
         
-        return result
-    
-    @staticmethod
-    def author_for_thread(uid: int) -> int:
-        rows = db.execute_query(
-            """
-            SELECT author_id FROM Thread
-            WHERE id = %(id)s;
-            """,
-            {'id': uid}
-        )
-
-        try:
-            row = rows.pop(0)
-            return row['author_id']
-        except:
-            return None
-    
-    @staticmethod
-    def validate(title: str, tag_ids: List[int]):
-        result = []
-
-        if title and title[0] not in ascii_letters + digits:
-            result.append("Title must begin with an alphanumeric character.")
-
-        if not (10 <= len(title) <= 80):
-            result.append("Title must be between 10 and 80 characters.")
-        
-        if len(tag_ids) > 5:
-            result.append("You can only select a maximum of 5 tags.")
-
         return result
 
     @staticmethod

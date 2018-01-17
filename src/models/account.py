@@ -11,6 +11,43 @@ class Account:
         self.display_name = display_name
         self.admin = admin
         self.threads = threads
+
+
+    ### Helper methods.
+    
+    @staticmethod
+    def validate(username: str, password: str) -> List[str]:
+        result = []
+
+        if not password:
+            result.append("Password can't be empty.")
+
+        if not (1 <= len(username) <= 16):
+            result.append("Username must be between 1 and 16 characters.")
+
+        if any(character not in ascii_letters + digits for character in username):
+            result.append("Username must contain only alphanumeric characters.")
+        
+        return result
+    
+    @staticmethod
+    def username_exists(username: str) -> bool:
+        rows = db.execute_query(
+            """
+            SELECT id FROM Account WHERE username = %(username)s;
+            """,
+            {'username': username}
+        )
+
+        try:
+            row = rows.pop(0)
+            return 'id' in row
+        
+        except:
+            return False
+    
+
+    ### CRUD actions.
     
     @staticmethod
     def find_by_id(uid: int) -> 'Account':
@@ -33,37 +70,6 @@ class Account:
 
         except:
             return None
-    
-    @staticmethod
-    def username_exists(username: str) -> bool:
-        rows = db.execute_query(
-            """
-            SELECT id FROM Account WHERE username = %(username)s;
-            """,
-            {'username': username}
-        )
-
-        try:
-            row = rows.pop(0)
-            return 'id' in row
-
-        except:
-            return False
-    
-    @staticmethod
-    def validate(username: str, password: str) -> List[str]:
-        result = []
-
-        if not password:
-            result.append("Password can't be empty.")
-
-        if not (1 <= len(username) <= 16):
-            result.append("Username must be between 1 and 16 characters.")
-
-        if any(character not in ascii_letters + digits for character in username):
-            result.append("Username must contain only alphanumeric characters.")
-        
-        return result
 
     @staticmethod
     def authenticate(username: str, password: str):

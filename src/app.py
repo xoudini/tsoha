@@ -56,7 +56,7 @@ def index():
 
 @app.route("/threads")
 def threads():
-    return ThreadController.index()
+    return ThreadController.view_for_threads()
 
 @app.route("/threads/<int:uid>", methods=['GET', 'POST'])
 def thread(uid: int):
@@ -156,7 +156,7 @@ def new_thread():
 
 @app.route("/tags")
 def tags():
-    return TagController.index()
+    return TagController.view_for_tags()
 
 @app.route("/tags/<int:uid>")
 def tag(uid: int):

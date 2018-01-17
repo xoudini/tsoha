@@ -15,6 +15,9 @@ class Tag:
             return self.uid == other.uid
         return False
     
+    
+    ### Helper methods.
+    
     def validate(self) -> List[str]:
         result = []
 
@@ -28,9 +31,12 @@ class Tag:
             result.append("Title must contain only alphanumeric characters.")
 
         return result
+
+
+    ### CRUD actions.
     
     @staticmethod
-    def all() -> List['Tag']:
+    def find_all() -> List['Tag']:
         rows = db.execute_query(
             """
             SELECT Tag.*, COUNT(ThreadTag.tag_id) as count FROM Tag
