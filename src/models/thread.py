@@ -116,28 +116,38 @@ class Thread:
             return row['author_id']
         except:
             return None
+    
+    @staticmethod
+    def validate(title: str, tag_ids: List[int]):
+        result = []
+
+        if title and title[0] not in ascii_letters + digits:
+            result.append("Title must begin with an alphanumeric character.")
+
+        if not (10 <= len(title) <= 80):
+            result.append("Title must be between 10 and 80 characters.")
+        
+        if len(tag_ids) > 5:
+            result.append("You can only select a maximum of 5 tags.")
+
+        return result
 
     @staticmethod
     def create(author_id: int, title: str, content: str, tag_ids: List[int]):
-        errors = []
+        # Remove whitespace.
+        title = title.strip()
+        content = content.strip()
+        
+        errors = Thread.validate(title, tag_ids)
 
+        # Convert tag_ids to integers.
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
             errors.append("Invalid formatting on tags.")
 
-        # Remove whitespace.
-        title = title.strip()
-        content = content.strip()
-        
-        if title and title[0] not in ascii_letters + digits:
-            errors.append("Title must begin with an alphanumeric character.")
-
-        if not (10 <= len(title) <= 80):
-            errors.append("Title must be between 10 and 80 characters.")
-
-        if not (10 <= len(content) <= 1000):
-            errors.append("Content must be between 10 and 1000 characters.")
+        response_errors = Response.validate(content)
+        errors.extend(response_errors)
 
         if errors:
             return {'errors': errors, 'title': title, 'content': content, 'tag_ids': tag_ids}
@@ -172,21 +182,16 @@ class Thread:
 
     @staticmethod
     def update(uid: int, title: str, tag_ids: List[int]):
-        errors = []
+        # Remove whitespace.
+        title = title.strip()
+        
+        errors = Thread.validate(title, tag_ids)
 
+        # Convert tag_ids to integers.
         try:
             tag_ids = list(int(tag_id) for tag_id in tag_ids)
         except:
             errors.append("Invalid formatting on tags.")
-
-        # Remove whitespace.
-        title = title.strip()
-        
-        if title and title[0] not in ascii_letters + digits:
-            errors.append("Title must begin with an alphanumeric character.")
-
-        if not (10 <= len(title) <= 80):
-            errors.append("Title must be between 10 and 80 characters.")
         
         if errors:
             return {'errors': errors, 'title': title, 'tag_ids': tag_ids}

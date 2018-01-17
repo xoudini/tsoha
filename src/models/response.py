@@ -15,6 +15,15 @@ class Response:
         self.created = "{0:%Y/%m/%d %H:%M}".format(created)
 
     @staticmethod
+    def validate(content: str):
+        result = []
+
+        if not (10 <= len(content) <= 1000):
+            result.append("Content must be between 10 and 1000 characters.")
+
+        return result
+
+    @staticmethod
     def find_by_thread_id(thread_id: int) -> List['Response']:
         rows = db.execute_query(
             """
@@ -40,13 +49,10 @@ class Response:
     
     @staticmethod
     def create(author_id: int, thread_id: int, content: str, created: datetime = None):
-        errors = []
-
         # Remove whitespace.
         content = content.strip()
 
-        if not (10 <= len(content) <= 1000):
-            errors.append("Content must be between 10 and 1000 characters.")
+        errors = Response.validate(content)
         
         if errors:
             return {'errors': errors, 'content': content}
