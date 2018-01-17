@@ -1,8 +1,6 @@
-from src.controllers.base import BaseController
-
 from src.models.response import Response
 
-class ResponseController(BaseController):
+class ResponseController:
     
     @staticmethod
     def create(author_id: int, thread_id: int, content: str):

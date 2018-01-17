@@ -1,11 +1,10 @@
 from flask import render_template
-from src.controllers.base import BaseController
 
 from typing import Dict
 
 from src.models.tag import Tag
 
-class TagController(BaseController):
+class TagController:
     
     @staticmethod
     def index():

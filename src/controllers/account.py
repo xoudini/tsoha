@@ -1,11 +1,10 @@
 from flask import render_template
-from src.controllers.base import BaseController
 
 from typing import Dict
 
 from src.models.account import Account
 
-class AccountController(BaseController):
+class AccountController:
     
     @staticmethod
     def view_for_signin(messages: Dict[str, str] = None):

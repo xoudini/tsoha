@@ -1,12 +1,11 @@
 from flask import render_template
-from src.controllers.base import BaseController
 
 from typing import Dict, List
 
 from src.models.thread import Thread
 from src.models.tag import Tag
 
-class ThreadController(BaseController):
+class ThreadController:
     
     @staticmethod
     def index():
