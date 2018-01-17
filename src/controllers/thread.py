@@ -29,6 +29,10 @@ class ThreadController:
         return render_template('edit_thread.html', title="Edit thread", thread=thread, tags=tags, messages=messages)
 
     @staticmethod
+    def thread_exists(uid: int):
+        return Thread.find_by_id(uid) is not None
+
+    @staticmethod
     def author_for_thread(uid: int):
         return Thread.author_for_thread(uid)
 

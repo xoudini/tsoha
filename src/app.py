@@ -70,6 +70,10 @@ def thread(uid: int):
         if 'content' not in request.form:
             abort(405)
         
+        # Abort if thread doesn't exist.
+        if not ThreadController.thread_exists(uid):
+            abort(404)
+        
         content = request.form['content']
 
         result = ResponseController.create(get_user_id(), uid, content)
