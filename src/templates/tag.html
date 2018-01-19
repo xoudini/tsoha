@@ -29,7 +29,7 @@
 
     {% if tag.threads %}
 
-    <h2>Posts tagged with <span style="color: #07b66d">{{tag.title}}</span></h2>
+    <h2>Posts tagged with <span class="btn btn-primary disabled" style="cursor: auto; opacity: 1;">{{tag.title}}</span></h2>
 
     <table class="table table-striped table-bordered">
         <thead>
@@ -49,8 +49,12 @@
                 <td><a href="/threads/{{thread.uid}}">{{thread.title}}</a></td>
                 <td>
                     {% if thread.tags %}
-                        {% for tag in thread.tags %}
-                        <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
+                        {% for subtag in thread.tags %}
+                            {% if subtag.uid == tag.uid %}
+                            <a class="btn btn-primary btn-sm disabled" href="#">{{subtag.title}}</a>
+                            {% else %}
+                            <a class="btn btn-default btn-sm" href="/tags/{{subtag.uid}}">{{subtag.title}}</a>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <p><i>None</i></p>
