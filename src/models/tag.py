@@ -5,10 +5,11 @@ from string import ascii_letters, digits
 
 class Tag:
 
-    def __init__(self, uid: int, title: str, count: int = None):
+    def __init__(self, uid: int, title: str, count: int = None, threads: List = None):
         self.uid = uid
         self.title = title
         self.count = count
+        self.threads = threads
     
     def __eq__(self, other):
         if isinstance(self, other.__class__):
@@ -69,7 +70,12 @@ class Tag:
 
         try:
             row = rows.pop(0)
-            tag = Tag(row['id'], row['title'], row['count'])
+
+            # Deferred in order to prevent circular imports.
+            from src.models.thread import Thread
+
+            threads = Thread.find_by_tag_id(row['id'])
+            tag = Tag(row['id'], row['title'], row['count'], threads)
             return tag
 
         except:

@@ -20,9 +20,58 @@
     <div class="control-group">&nbsp;</div>
     {% endif %}
 
-<div>
-    <p><span class="badge badge-primary badge-pill">{{tag.count}}</span> post{% if tag.count != 1 %}s{% endif %}</p>
-</div>
+    <div>
+        <p><span class="badge badge-primary badge-pill">{{tag.count}}</span> post{% if tag.count != 1 %}s{% endif %}</p>
+    </div>
+
+    <br/>
+    <br/>
+
+    {% if tag.threads %}
+
+    <h2>Posts tagged with <span style="color: #07b66d">{{tag.title}}</span></h2>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Tags</th>
+                <th>Author</th>
+                <th>Posted</th>
+                <th>Responses</th>
+                <th>Last active</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            {% for thread in tag.threads %}
+            <tr>
+                <td><a href="/threads/{{thread.uid}}">{{thread.title}}</a></td>
+                <td>
+                    {% if thread.tags %}
+                        {% for tag in thread.tags %}
+                        <a class="btn btn-default btn-sm" href="/tags/{{tag.uid}}">{{tag.title}}</a>
+                        {% endfor %}
+                    {% else %}
+                        <p><i>None</i></p>
+                    {% endif %}
+                </td>
+                <td><a href="/users/{{thread.author.uid}}">{% if thread.author.display_name %}{{thread.author.display_name}}{% else %}{{thread.author.username}}{% endif %}</a></td>
+                <td><time datetime="{{thread.created}}">{{thread.created}} UTC</time></td>
+                <td><p>{{thread.response_count}}</p></td>
+                <td><time datetime="{{thread.last_active}}">{{thread.last_active}} UTC</time></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+
+    <div class="alert alert-info">
+        No posts are using this tag.
+    </div>
+
+    {% endif %}
 
 {% else %}
 
