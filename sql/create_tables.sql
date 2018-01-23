@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Thread (
     created         TIMESTAMP       NOT NULL        DEFAULT (NOW() AT TIME ZONE 'UTC'),
 
 /*  additional constraints          rule  */
-    CONSTRAINT title_length         CHECK (1 <= LENGTH(title) AND LENGTH(title) <= 80)              -- Constrain title length.
+    CONSTRAINT title_length         CHECK (10 <= LENGTH(title) AND LENGTH(title) <= 80)             -- Constrain title length.
 );
 
 CREATE TABLE IF NOT EXISTS Response (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Response (
     created         TIMESTAMP       NOT NULL        DEFAULT (NOW() AT TIME ZONE 'UTC'),
     
 /*  additional constraints          rule  */
-    CONSTRAINT content_length       CHECK (1 <= LENGTH(content) AND LENGTH(content) <= 1000)        -- Constrain content length.
+    CONSTRAINT content_length       CHECK (10 <= LENGTH(content) AND LENGTH(content) <= 1000)       -- Constrain content length.
 );
 
 CREATE TABLE IF NOT EXISTS ThreadTag (
