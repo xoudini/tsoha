@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS Tag (
     title           TEXT            NOT NULL        UNIQUE,
 
 /*  additional constraints          rule  */
-    CONSTRAINT title_length         CHECK (1 <= LENGTH(title) AND LENGTH(title) <= 16)              -- Constrain title length.
+    CONSTRAINT title_length         CHECK (1 <= LENGTH(title) AND LENGTH(title) <= 16),             -- Constrain title length.
+    CONSTRAINT title_format         CHECK (title ~ '^[0-9a-z]*$')                                   -- Allow only lowercase alphanumeric titles.
 );
 
 CREATE TABLE IF NOT EXISTS Thread (
